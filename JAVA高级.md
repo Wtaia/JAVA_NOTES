@@ -5213,3 +5213,1600 @@ public class Order<T> {//T\E\K\V
 ```
 
 # 六、IO流
+
+## （一）File类
+
+### 1.File类概述
+
+- java.io.File类：文件和文件目录路径的抽象表示形式，与平台无关 
+- File 能新建、删除、重命名文件和目录，但 File 不能访问文件内容本身。 如果需要访问文件内容本身，则需要使用输入/输出流。 
+- 想要在Java程序中表示一个真实存在的文件或目录，那么必须有一个File对 象，但是Java程序中的一个File对象，可能没有一个真实存在的文件或目录。 
+- File对象可以作为参数传递给流的构造器。
+
+```java
+/**
+ * File类的使用
+ * 1.File类的一个对象，代表一个文件或一个文件目录（文件夹）
+ * 2.File类声明在java.io包下
+ * 3.File类中关于文件或文件目录的创建、删除、重命名、修改时间、文件大小等方法，并未涉及到修改文件内容的操作，
+ * 如果需要操作文件内容，则必须使用IO流。
+ * 4.File类的对象常会作为参数传入流的构造器中，指明读取或者写入的“终点”。
+ *
+ *
+ * @author taia
+ * @creat 2021-10-23-20:36
+ */
+```
+
+
+
+### 2.常用构造器
+
+![image-20211025124552701](JAVA高级.assets/image-20211025124552701.png)
+
+```java
+ /**
+     * 1.如何创建File类的实例
+     *      File(String filePath)
+     *      File(String parentPath,String childPath)
+     *      File(File parent,String child)
+     * 2.路径：
+     *      相对路径：相较于某个路径下，指明的路径。
+     *      绝对路径：包含盘符在内的文件或文件目录路径。
+     * 3.路径分隔符：
+     *      windows：\\
+     *      unix：/
+     *
+     *
+     */
+    @Test
+    public void test1(){
+        //构造器一：
+        File file1 = new File("hello.txt");//相对于当前module
+        File file2 = new File("D:\\IdeaProjects\\JavaSenior\\day09\\he.txt");
+
+        System.out.println(file1);
+        System.out.println(file2);
+
+        //构造器二：
+        File file3 = new File("D:\\IdeaProjects\\JavaSenior\\day09\\he.txt","Java");
+        System.out.println(file3);
+
+        //构造器三：
+        File file4 = new File(file3,"hi.txt");
+        System.out.println(file4);
+    }
+```
+
+### 3.路径分隔符
+
+![image-20211025124727812](JAVA高级.assets/image-20211025124727812.png)
+
+### 4.常用方法
+
+#### 4.1 File类的获取功能
+
+![image-20211025124851337](JAVA高级.assets/image-20211025124851337.png)
+
+```java
+/**
+     * File类的获取功能
+     *  public String getAbsolutePath()：获取绝对路径
+     *  public String getPath() ：获取路径
+     *  public String getName() ：获取名称
+     *  public String getParent()：获取上层文件目录路径。若无，返回null
+     *  public long length() ：获取文件长度（即：字节数）。不能获取目录的长度。
+     *  public long lastModified() ：获取最后一次的修改时间，毫秒值
+     *  如下的两个方法适用于文件目录
+     *  public String[] list() ：获取指定目录下的所有文件或者文件目录的名称数组
+     *  public File[] listFiles() ：获取指定目录下的所有文件或者文件目录的File数组
+     */
+    @Test
+    public void test2(){
+        File file1 = new File("hello.txt");
+        File file2 = new File("D:\\IdeaProjects\\JavaSenior\\day09\\he.txt");
+
+        System.out.println(file1.getAbsolutePath());
+        System.out.println(file1.getPath());
+        System.out.println(file1.getName());
+        System.out.println(file1.getParent());
+        System.out.println(file1.length());
+        System.out.println(new Date(file1.lastModified()));
+
+        System.out.println();
+
+        System.out.println(file2.getAbsolutePath());
+        System.out.println(file2.getPath());
+        System.out.println(file2.getName());
+        System.out.println(file2.getParent());
+        System.out.println(file2.length());
+        System.out.println(new Date(file2.lastModified()));
+
+
+    }
+
+    @Test
+    public void test3(){
+        File file = new File("D:\\IdeaProjects\\JavaSenior\\day09");
+
+        String[] list = file.list();
+        for(String s:list){
+            System.out.println(s);
+        }
+
+        System.out.println();
+        File[] files = file.listFiles();
+        for(File f:files){
+            System.out.println(f);
+        }
+    }
+```
+
+
+
+#### 4.2File类的重命名功能
+
+![image-20211025124906463](JAVA高级.assets/image-20211025124906463.png)
+
+```java
+/**
+     * File类的重命名功能
+     *  public boolean renameTo(File dest):把文件重命名为指定的文件路径
+     *  比如：file1.renameTo(file2)
+     *  要想保证是成功的，需要file1在硬盘中是存在的，且file2不能存在
+     */
+    @Test
+    public void test4(){
+        File file1 = new File("hello.txt");//file1必须存在
+        File file2 = new File("D:\\IdeaProjects\\JavaSenior\\day09\\hi.txt");//file2不能存在，存在的话重命名失败
+
+        boolean renameTo = file1.renameTo(file2);
+        System.out.println(renameTo);
+    }
+```
+
+
+
+#### 4.3File类的判断功能
+
+![image-20211025124919097](JAVA高级.assets/image-20211025124919097.png)
+
+```java
+/**
+     * File类的判断功能
+     *  public boolean isDirectory()：判断是否是文件目录
+     *  public boolean isFile() ：判断是否是文件
+     *  public boolean exists() ：判断是否存在
+     *  public boolean canRead() ：判断是否可读
+     *  public boolean canWrite() ：判断是否可写
+     *  public boolean isHidden() ：判断是否隐藏
+     */
+    @Test
+    public void test5(){
+        //文件
+//        File file1 = new File("he.txt");
+        //文件目录
+        File file1 = new File("D:\\IdeaProjects\\JavaSenior\\day09");
+        System.out.println(file1.isDirectory());
+        System.out.println(file1.isFile());
+        System.out.println(file1.exists());
+        System.out.println(file1.canRead());
+        System.out.println(file1.canWrite());
+        System.out.println(file1.isHidden());
+
+
+    }
+```
+
+
+
+#### 4.4File类的创建功能
+
+![image-20211025124931994](JAVA高级.assets/image-20211025124931994.png)
+
+#### 4.5File类的删除功能
+
+![image-20211025124946115](JAVA高级.assets/image-20211025124946115.png)
+
+```java
+/**
+     * File类的创建功能
+     *  public boolean createNewFile() ：创建文件。若文件存在，则不创建，返回false
+     *  public boolean mkdir() ：创建文件目录。如果此文件目录存在，就不创建了。如果此文件目录的上层目录不存在，也不创建。
+     *  public boolean mkdirs() ：创建文件目录。如果上层文件目录不存在，一并创建
+     *  注意事项：如果你创建文件或者文件目录没有写盘符路径，那么，默认在项目路径下。
+     * File类的删除功能
+     *  public boolean delete()：删除文件或者文件夹
+     *  注意事项：
+     *  Java中的删除不走回收站。要删除一个文件目录，请注意该文件目录内不能包含文件或者文件目录。
+     */
+
+    @Test
+    public void test6() throws IOException {
+        //文件的创建
+        File file1 = new File("hello.txt");
+        if (!file1.exists()){
+            file1.createNewFile();
+            System.out.println("创建成功");
+        }else{
+            file1.delete();
+            System.out.println("删除成功");
+        }
+    }
+    @Test
+    public void test7(){
+        //文件目录的创建
+        File file1 = new File("D:\\IdeaProjects\\JavaSenior\\day09\\IO\\io3");
+        boolean mkdir = file1.mkdir();
+        if (mkdir){
+            System.out.println("创建成功1");
+        }
+        File file2 = new File("D:\\IdeaProjects\\JavaSenior\\day09\\IO2\\io4");
+        boolean mkdir1 = file1.mkdirs();
+        if (mkdir1){
+            System.out.println("创建成功2");
+        }
+
+    }
+```
+
+## （二）IO流原理及流的分类
+
+### 1.Java IO原理
+
+- I/O是Input/Output的缩写， I/O技术是非常实用的技术，用于 处理设备之间的数据传输。如读/写文件，网络通讯等。 
+- Java程序中，对于数据的输入/输出操作以“流(stream)” 的 方式进行。 
+- java.io包下提供了各种“流”类和接口，用以获取不同种类的 数据，并通过标准的方法输入或输出数据。
+- 输入input：读取外部数据（磁 盘、光盘等存储设备的数据）到 程序（内存）中。 
+- 输出output：将程序（内存） 数据输出到磁盘、光盘等存储设 备中。
+
+### 2.流的分类
+
+- 按操作数据单位不同分为：字节流(8 bit)，字符流(16 bit) 
+- 按数据流的流向不同分为：输入流，输出流 
+- 按流的角色的不同分为：节点流，处理流
+
+![image-20211027160601730](JAVA高级.assets/image-20211027160601730.png)
+
+1. Java的IO流共涉及40多个类，实际上非常规则，都是从如下4个 抽象基类派生的。 
+2. 由这四个类派生出来的子类名称都是以其父类名作为子类名后缀。
+
+![image-20211027160641705](JAVA高级.assets/image-20211027160641705.png)
+
+```java
+/**
+ * 一、流的分类：
+ *  1.操作数据单位：字节流、字符流；
+ *  2.数据的流向：输入流、输出流；
+ *  3.流的角色：节点流、处理流；
+ *
+ * 二、流的体系结构
+ *      抽象基类            节点流（或文件流）                                   缓冲流（处理流的一种）
+ *      InputStream         FileInputStream (read(byte[] buffer))               BufferedInputStream (read(byte[] buffer))
+ *      OutputStream        FileOutputStream  (write(byte[] buffer,0,len))      BufferedOutputStream (write(byte[] buffer,0,len)/flush())
+ *      Reader              FileReader (read(char[] cbuf))                      BufferedReader (read(char[] cbuf)/readLine())
+ *      Writer              FileWriter (write(char[] cbuf,0,len))               BufferedWriter (write(char[] cbuf,0,len)/flush())
+ *
+ *
+ *
+ *
+ * @author taia
+ * @creat 2021-10-25-16:03
+ */
+```
+
+
+
+### 3.IO 流体系
+
+![image-20211027160748724](JAVA高级.assets/image-20211027160748724.png)
+
+#### 3.1节点流和处理流
+
+节点流：直接从数据源或目的地读写数据
+
+![image-20211027160826895](JAVA高级.assets/image-20211027160826895.png)
+
+处理流：不直接连接到数据源或目的地，而是“连接”在已存 在的流（节点流或处理流）之上，通过对数据的处理为程序提 供更为强大的读写功能。
+
+![image-20211027160846907](JAVA高级.assets/image-20211027160846907.png)
+
+#### 3.2InputStream & Reader
+
+![image-20211027161010746](JAVA高级.assets/image-20211027161010746.png)
+
+##### 3.2.1InputStream
+
+![image-20211027161042334](JAVA高级.assets/image-20211027161042334.png)
+
+##### 3.2.2Reader
+
+![image-20211027161103123](JAVA高级.assets/image-20211027161103123.png)
+
+#### 3.3OutputStream & Writer
+
+![image-20211027161140360](JAVA高级.assets/image-20211027161140360.png)
+
+##### 3.3.1OutputStream
+
+![image-20211027161208562](JAVA高级.assets/image-20211027161208562.png)
+
+##### 3.3.2Writer
+
+![image-20211027161233832](JAVA高级.assets/image-20211027161233832.png)
+
+## （二）节点流(或文件流)
+
+### 1.字符流
+
+#### 1.1读取文件
+
+![image-20211027161410273](JAVA高级.assets/image-20211027161410273.png)
+
+```java
+    /**
+     * 将day09下的hi.txt文件读入程序中，并输出到控制台
+     *
+     * 说明：
+     *  1.read()的理解：返回读入的一个字符，如果到达文件末尾返回-1。
+     *  2.异常的处理：为了保证流资源一定可以执行关闭操作，需要使用try-catch-finally处理。
+     *  3.读入的文件一定要存在，否则就会报FileNotFoundException。
+     */
+    @Test
+    public void testFileReader(){
+        FileReader fr = null;
+        try {
+            //1.实例化File类对象，指明要操作的文件
+            File file = new File("hi.txt");//相对路径，相对当前Module
+            //2.提供具体的流
+            fr = new FileReader(file);
+            //3.数据的读入:
+            //  read():返回读入的一个字符，如果到达文件末尾返回-1.
+            //方式一
+//        int data = fr.read();
+//        while(data != -1){
+//            System.out.print((char)data);
+//            data = fr.read();
+//        }
+            //方式二:语法上针对方式一的修改
+            int data;
+            while ((data = fr.read()) != -1){
+                System.out.print((char)data);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //4.流的关闭操作
+            try {
+                if (fr != null)//避免在造对象之前出现异常，从而出现空指针
+                    fr.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    /**
+     * 对read()操作升级：使用read的重载方法
+     */
+    @Test
+    public void testFileReader1(){
+        FileReader fr = null;
+        try {
+            //1.File类的实例化
+            File file = new File("hi.txt");
+            //2.流的实例化
+            fr = new FileReader(file);
+            //3.具体操作
+            //read(char[] cbuf):返回每次读入cbuf数组中的字符的个数。如果到大文件末尾返回-1.
+            char[] cbuf = new char[5];
+            int len;
+            while ((len = fr.read(cbuf)) != -1){
+                //方式一：
+                //错误的写法
+//                for (int i = 0;i < cbuf.length;i++){
+//                    System.out.print(cbuf[i]);
+//                }
+                //正确的
+//                for (int i = 0;i < len;i++){
+//                    System.out.print(cbuf[i]);
+//                }
+
+                //方式二：
+                //错误的写法
+//                String str = new String(cbuf);
+//                System.out.print(str);
+                //正确的
+                String str = new String(cbuf,0,len);//把数组转化为字符串，从0到len。
+                System.out.print(str);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(fr != null)
+                //4.资源的关闭
+                fr.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+```
+
+#### 1.2写入文件
+
+![image-20211027161638370](JAVA高级.assets/image-20211027161638370.png)
+
+```java
+ /**
+     * 从内存中写出数据到硬盘的文件里。
+     * 说明：
+     *  1.输出操作，对应的File是可以不存在的，并不会报异常。
+     *  2.File对应的硬盘中的文件：
+     *      如果不存在：在输出的过程中会自动创建此文件。
+     *      如果存在：
+     *          构造器FileWriter（文件对象，true）：不会对原有文件覆盖，而是在原有文件基础上追加。
+     *          构造器FileWriter（文件对象，false）/（文件对象）：对原有文件的一个覆盖。
+     *
+     */
+    @Test
+    public void FileReaderWriter(){
+        FileWriter fw = null;
+        try {
+            //1.提供File类的对象，指明写出到硬盘的文件
+            File file = new File("hello.txt");
+            //2.提供FileWriter的对象，用于数据的写出
+            fw = new FileWriter(file,true);
+            //3.写出的具体操作
+            fw.write("I have a dream\n");
+            fw.write("you need to have a dream!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //4.流资源的关闭
+            try {
+                fw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+```
+
+### 2.字节流
+
+```java
+package com.taiacloud.java2;
+
+import org.junit.Test;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+/**
+ * 测试FileInputStream和FileOutputStream的使用
+ *
+ * 结论：
+ *  1.对于文本文件（.txt\.java\.c\.cpp...），使用字符流处理；
+ *  2.对于非文本文件(.jpg\.mp3\.mp4\.avi\.ppt\.doc...)，使用字节流处理；
+ *
+ * @author taia
+ * @creat 2021-10-25-19:29
+ */
+public class FileInputOutputStreamTest {
+    /**
+     * 使用FileInputStream处理文本文件，是可能出现乱码的。
+     * 字节流可以用来处理英文字符，和字符流相同，因为在 utf-8 编码中，一个英文字母就占用一个字节
+     * 中文以及其他字符不可以这么操作，文本文件还是用字符流处理
+     */
+    @Test
+    public void testFileInputStream(){
+        FileInputStream fis = null;
+        try {
+            //1.造文件
+            File file = new File("hello.txt");
+            //2.造流
+            fis = new FileInputStream(file);
+            //3.读数据
+            byte[] buffer = new byte[5];
+            int len;//记录每次读取的字节的个数
+            while((len = fis.read(buffer)) != -1){
+                String str = new String(buffer, 0, len);
+                System.out.print(str);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                //4.关闭流
+                if(fis != null)
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    /**
+     * 实现对图片的复制操作
+     * @throws IOException
+     */
+    @Test
+    public void testFileInputOutputStream(){
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        try {
+            File srcFile = new File("WeChat_pic.jpg");
+            File destFile = new File("WeChat_pic_copy.jpg");
+
+            fis = new FileInputStream(srcFile);
+            fos = new FileOutputStream(destFile);
+
+            //复制过程
+            byte[] buffer = new byte[5];
+            int len;
+            while ((len = fis.read(buffer)) != -1) {
+                fos.write(buffer, 0, len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null)
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (fis != null)
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+
+    //使用字节流进行指定路径下文件的复制
+    public void copyFile(String srcPath, String destPath){
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        try {
+            File srcFile = new File(srcPath);
+            File destFile = new File(destPath);
+
+            fis = new FileInputStream(srcFile);
+            fos = new FileOutputStream(destFile);
+
+            //复制过程
+//            byte[] buffer = new byte[5];//57940ms
+            byte[] buffer = new byte[1024];//510ms
+            int len;
+            while ((len = fis.read(buffer)) != -1) {
+                fos.write(buffer, 0, len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null)
+                    fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (fis != null)
+                    fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void testCopyFile(){
+        long start = System.currentTimeMillis();
+
+        String srcPath = "C:\\Users\\TAIA\\Desktop\\尚硅谷Java零基础入门教程（含百道Java真题，2万多行Java代码实战）\\652.650.尚硅谷_反射-获取运行时类的方法的内部结构(Av48144058,P652).mp4";
+        String destPath = "C:\\Users\\TAIA\\Desktop\\1.mp4";
+
+        copyFile(srcPath, destPath);
+
+        long end = System.currentTimeMillis();
+
+        System.out.println("复制操作花费的时间为：" + (end - start) + "ms");
+    }
+
+
+
+}
+
+```
+
+
+
+### 3.注意
+
+- 定义文件路径时，注意：可以用“/”或者“\\”。 
+- 在写入一个文件时，如果使用构造器FileOutputStream(file)，则目录下有同名文 件将被覆盖。 
+- 如果使用构造器FileOutputStream(file,true)，则目录下的同名文件不会被覆盖， 在文件内容末尾追加内容。 
+- 在读取文件时，必须保证该文件已存在，否则报异常。 
+- 字节流操作字节，比如：.mp3，.avi，.rmvb，mp4，.jpg，.doc，.ppt 
+- 字符流操作字符，只能操作普通文本文件。最常见的文本文 件：.txt，.java，.c，.cpp 等语言的源代码。尤其注意.doc,excel,ppt这些不是文 本文件。
+
+## （三）缓冲流
+
+![image-20211027161837021](JAVA高级.assets/image-20211027161837021.png)
+
+![image-20211027161846983](JAVA高级.assets/image-20211027161846983.png)
+
+![image-20211027161900032](JAVA高级.assets/image-20211027161900032.png)
+
+```java
+package com.taiacloud.java2;
+
+import org.junit.Test;
+
+import java.io.*;
+
+/**
+ * 处理流之一：缓冲流的使用
+ *  1.缓冲流：
+ *      BufferedInputStream
+ *      BufferedOutputStream
+ *      BufferedReader
+ *      BufferedWriter
+ *
+ *  2.作用：提高流的读取、写入的速度
+ *    能够提高流的速度的原因：内部有一个缓冲区
+ *
+ *  3.处理流，就是“套接”在已有的流的基础上。
+ * @author taia
+ * @creat 2021-10-25-20:46
+ */
+public class BufferedTest {
+    /**
+     * 实现非文本文件的复制
+     */
+    @Test
+    public void BufferedStreamTest(){
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try {
+            //1.造文件
+            File srcFile = new File("WeChat_pic.jpg");
+            File destFile = new File("WeChat_pic_copy2.jpg");
+            //2.造流
+            //2.1造节点流
+            FileInputStream fis = new FileInputStream(srcFile);
+            FileOutputStream fos = new FileOutputStream(srcFile);
+            //2.2造缓冲流
+            bis = new BufferedInputStream(fis);
+            bos = new BufferedOutputStream(fos);
+            //3.复制细节：读取、写入
+            byte[] buffer = new byte[5];
+            int len;
+            while ((len = bis.read(buffer)) != -1){
+                bos.write(buffer, 0, len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //4.关闭流
+            //要求：先关闭外层流，再关闭内层流
+            try {
+                if (bos != null)
+                    bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if(bis != null)
+                    bis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //说明：关闭外层流的同时，内层流也会自动关闭，关于内层流的关闭可省略
+//        fos.close();
+//        fis.close();
+        }
+    }
+
+    //实现文件复制的方法
+    public void copyFileWithBuffered(String srcPath, String destPath){
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try {
+            //1.造文件
+            File srcFile = new File(srcPath);
+            File destFile = new File(destPath);
+            //2.造流
+            //2.1造节点流
+            FileInputStream fis = new FileInputStream(srcFile);
+            FileOutputStream fos = new FileOutputStream(srcFile);
+            //2.2造缓冲流
+            bis = new BufferedInputStream(fis);
+            bos = new BufferedOutputStream(fos);
+            //3.复制细节：读取、写入
+            byte[] buffer = new byte[5];//15ms
+            int len;
+            while ((len = bis.read(buffer)) != -1){
+                bos.write(buffer, 0, len);
+//                bos.flush();//刷新缓冲区
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //4.关闭流
+            //要求：先关闭外层流，再关闭内层流
+            try {
+                if (bos != null)
+                    bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if(bis != null)
+                    bis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //说明：关闭外层流的同时，内层流也会自动关闭，关于内层流的关闭可省略
+//        fos.close();
+//        fis.close();
+        }
+    }
+
+    @Test
+    public void testCopyFileWithBuffer(){
+        long start = System.currentTimeMillis();
+
+        String srcPath = "C:\\Users\\TAIA\\Desktop\\尚硅谷Java零基础入门教程（含百道Java真题，2万多行Java代码实战）\\652.650.尚硅谷_反射-获取运行时类的方法的内部结构(Av48144058,P652).mp4";
+        String destPath = "C:\\Users\\TAIA\\Desktop\\2.mp4";
+
+        copyFileWithBuffered(srcPath, destPath);
+
+        long end = System.currentTimeMillis();
+
+        System.out.println("复制操作花费的时间为：" + (end - start) + "ms");
+    }
+
+    /*
+    使用BufferedReader和BufferedWriter实现文本文件的复制
+
+     */
+    @Test
+    public void testBufferedReaderBufferedWriter(){
+        BufferedReader br = null;
+        BufferedWriter bw = null;
+        try {
+            //创建文件和相应的流
+            br = new BufferedReader(new FileReader(new File("dbcp.txt")));
+            bw = new BufferedWriter(new FileWriter(new File("dbcp1.txt")));
+
+            //读写操作
+            //方式一：使用char[]数组
+//            char[] cbuf = new char[1024];
+//            int len;
+//            while((len = br.read(cbuf)) != -1){
+//                bw.write(cbuf,0,len);
+//    //            bw.flush();
+//            }
+
+            //方式二：使用String
+            String data;
+            while((data = br.readLine()) != null){//readLine:一次读一行
+                //方法一：
+//                bw.write(data + "\n");//data中不包含换行符
+                //方法二：
+                bw.write(data);//data中不包含换行符
+                bw.newLine();//提供换行的操作
+
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //关闭资源
+            if(bw != null){
+
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(br != null){
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+    }
+
+}
+
+```
+
+## （四）转换流
+
+- 转换流提供了在字节流和字符流之间的转换
+
+- Java API提供了两个转换流：
+
+  ​	 InputStreamReader：将InputStream转换为Reader 
+
+  ​	 OutputStreamWriter：将Writer转换为OutputStream
+
+- 字节流中的数据都是字符时，转成字符流操作更高效。
+
+- 很多时候我们使用转换流来处理文件乱码问题。实现编码和 解码的功能。
+
+![image-20211027162922441](JAVA高级.assets/image-20211027162922441.png)
+
+![image-20211027162931084](JAVA高级.assets/image-20211027162931084.png)
+
+![image-20211027162941540](JAVA高级.assets/image-20211027162941540.png)
+
+```java
+package com.taiacloud.java2;
+
+import org.junit.Test;
+
+import java.io.*;
+
+/**
+ * 处理流之二：转换流的使用
+ * 1.转换流：属于字符流
+ *   InputStreamReader：将一个字节的输入流转换为字符的输入流
+ *   OutputStreamWriter：将一个字符的输出流转换为字节的输出流
+ *
+ * 2.作用：提供字节流与字符流之间的转换
+ *
+ * 3. 解码：字节、字节数组  --->字符数组、字符串
+ *    编码：字符数组、字符串 ---> 字节、字节数组
+ *
+ *
+ * 4.字符集
+ ASCII：美国标准信息交换码。
+    用一个字节的7位可以表示。
+ ISO8859-1：拉丁码表。欧洲码表
+    用一个字节的8位表示。
+ GB2312：中国的中文编码表。最多两个字节编码所有字符
+ GBK：中国的中文编码表升级，融合了更多的中文文字符号。最多两个字节编码
+ Unicode：国际标准码，融合了目前人类使用的所有字符。为每个字符分配唯一的字符码。所有的文字都用两个字节来表示。
+ UTF-8：变长的编码方式，可用1-4个字节来表示一个字符。
+
+ *
+ *
+ * @author taia
+ * @create
+ */
+public class InputStreamReaderTest {
+
+    /*
+    此时处理异常的话，仍然应该使用try-catch-finally
+    InputStreamReader的使用，实现字节的输入流到字符的输入流的转换
+     */
+    @Test
+    public void test1() throws IOException {
+
+        FileInputStream fis = new FileInputStream("dbcp.txt");
+//        InputStreamReader isr = new InputStreamReader(fis);//使用系统默认的字符集
+        //参数2指明了字符集，具体使用哪个字符集，取决于文件dbcp.txt保存时使用的字符集
+        InputStreamReader isr = new InputStreamReader(fis,"UTF-8");//不加第二个参数使用系统默认的字符集
+
+        char[] cbuf = new char[20];
+        int len;
+        while((len = isr.read(cbuf)) != -1){
+            String str = new String(cbuf,0,len);
+            System.out.print(str);
+        }
+
+        isr.close();
+
+    }
+
+    /*
+    此时处理异常的话，仍然应该使用try-catch-finally
+
+    综合使用InputStreamReader和OutputStreamWriter
+     */
+    @Test
+    public void test2() throws Exception {
+        //1.造文件、造流
+        File file1 = new File("dbcp.txt");
+        File file2 = new File("dbcp_gbk.txt");
+
+        FileInputStream fis = new FileInputStream(file1);
+        FileOutputStream fos = new FileOutputStream(file2);
+
+        InputStreamReader isr = new InputStreamReader(fis,"utf-8");
+        OutputStreamWriter osw = new OutputStreamWriter(fos,"gbk");
+
+        //2.读写过程
+        char[] cbuf = new char[20];
+        int len;
+        while((len = isr.read(cbuf)) != -1){
+            osw.write(cbuf,0,len);
+        }
+
+        //3.关闭资源
+        isr.close();
+        osw.close();
+
+
+    }
+
+
+}
+
+```
+
+![image-20211027163123734](JAVA高级.assets/image-20211027163123734.png)
+
+![image-20211027163137410](JAVA高级.assets/image-20211027163137410.png)
+
+## （五）其他流
+
+### 1.标准输入、输出流
+
+![image-20211027163214236](JAVA高级.assets/image-20211027163214236.png)
+
+```java
+/*
+    1.标准的输入、输出流
+    1.1
+    System.in:标准的输入流，默认从键盘输入
+    System.out:标准的输出流，默认从控制台输出
+    1.2
+    System类的setIn(InputStream is) / setOut(PrintStream ps)方式重新指定输入和输出的流。
+
+    1.3练习：
+    从键盘输入字符串，要求将读取到的整行字符串转成大写输出。然后继续进行输入操作，
+    直至当输入“e”或者“exit”时，退出程序。
+
+    方法一：使用Scanner实现，调用next()返回一个字符串
+    方法二：使用System.in实现。System.in  --->  转换流 ---> BufferedReader的readLine()
+
+     */
+    public static void main(String[] args) {
+        BufferedReader br = null;
+        try {
+            InputStreamReader isr = new InputStreamReader(System.in);
+            br = new BufferedReader(isr);
+
+            while (true) {
+                System.out.println("请输入字符串：");
+                String data = br.readLine();
+                if ("e".equalsIgnoreCase(data) || "exit".equalsIgnoreCase(data)) {
+                    System.out.println("程序结束");
+                    break;
+                }
+
+                String upperCase = data.toUpperCase();
+                System.out.println(upperCase);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+```
+
+### 2.打印流
+
+![image-20211027163300983](JAVA高级.assets/image-20211027163300983.png)
+
+```java
+/*
+    2. 打印流：PrintStream 和PrintWriter
+
+    2.1 提供了一系列重载的print() 和 println()
+    2.2 练习：
+
+
+
+     */
+
+    @Test
+    public void test2() {
+        PrintStream ps = null;
+        try {
+            FileOutputStream fos = new FileOutputStream(new File("D:\\IO\\text.txt"));
+            // 创建打印输出流,设置为自动刷新模式(写入换行符或字节 '\n' 时都会刷新输出缓冲区)
+            ps = new PrintStream(fos, true);
+            if (ps != null) {// 把标准输出流(控制台输出)改成文件
+                System.setOut(ps);
+            }
+
+
+            for (int i = 0; i <= 255; i++) { // 输出ASCII字符
+                System.out.print((char) i);
+                if (i % 50 == 0) { // 每50个数据一行
+                    System.out.println(); // 换行
+                }
+            }
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (ps != null) {
+                ps.close();
+            }
+        }
+
+    }
+```
+
+### 3.数据流
+
+![image-20211027163342540](JAVA高级.assets/image-20211027163342540.png)
+
+```java
+/*
+    3. 数据流
+    3.1 DataInputStream 和 DataOutputStream
+    3.2 作用：用于读取或写出基本数据类型的变量或字符串
+
+    练习：将内存中的字符串、基本数据类型的变量写出到文件中。
+
+    注意：处理异常的话，仍然应该使用try-catch-finally.
+     */
+    @Test
+    public void test3() throws IOException {
+        //1.
+        DataOutputStream dos = new DataOutputStream(new FileOutputStream("data.txt"));
+        //2.
+        dos.writeUTF("王泰雅");
+        dos.flush();//刷新操作，将内存中的数据写入文件
+        dos.writeInt(23);
+        dos.flush();
+        dos.writeBoolean(true);
+        dos.flush();
+        //3.
+        dos.close();
+
+
+    }
+    /*
+    将文件中存储的基本数据类型变量和字符串读取到内存中，保存在变量中。
+
+    注意点：读取不同类型的数据的顺序要与当初写入文件时，保存的数据的顺序一致！
+
+     */
+    @Test
+    public void test4() throws IOException {
+        //1.
+        DataInputStream dis = new DataInputStream(new FileInputStream("data.txt"));
+        //2.
+        String name = dis.readUTF();
+        int age = dis.readInt();
+        boolean isMale = dis.readBoolean();
+
+        System.out.println("name = " + name);
+        System.out.println("age = " + age);
+        System.out.println("isMale = " + isMale);
+
+        //3.
+        dis.close();
+
+    }
+```
+
+## （六）对象流
+
+![image-20211027163535200](JAVA高级.assets/image-20211027163535200.png)
+
+### 1.对象的序列化
+
+![image-20211027163600382](JAVA高级.assets/image-20211027163600382.png)
+
+![image-20211027163610271](JAVA高级.assets/image-20211027163610271.png)
+
+### 2.使用对象流序列化对象
+
+![image-20211027163650040](JAVA高级.assets/image-20211027163650040.png)
+
+![image-20211027163701631](JAVA高级.assets/image-20211027163701631.png)
+
+```java
+package com.taiacloud.java3;
+
+import org.junit.Test;
+
+import java.io.*;
+
+/**
+ * 对象流的使用
+ * 1.ObjectInputStream 和 ObjectOutputStream
+ * 2.作用：用于存储和读取基本数据类型数据或对象的处理流。它的强大之处就是可以把Java中的对象写入到数据源中，也能把对象从数据源中还原回来。
+ *
+ * 3.要想让一个java对象是可序列化的，需要满足相应的要求。见Person.java
+ *
+ * 4.序列化机制：对象序列化机制允许把内存中的Java对象转换成平台无关的二进制流，
+ * 从而允许把这种二进制流持久地保存在磁盘上，或通过网络将这种二进制流传输到另一个网络节点。
+ * 当其它程序获取了这种二进制流，就可以恢复成原来的Java对象
+ *
+ * @author taia
+ * @creat 2021-10-26-18:44
+ */
+public class ObjectInputOutputStreamTest {
+    /**
+     * 序列化过程：将内存中的java对象保存到磁盘中或通过网络传输出去
+     * 使用ObjectOutPutStream实现
+     */
+    @Test
+    public void testObjectOutputStream(){
+        ObjectOutputStream oos = null;
+        try {
+            //1.
+            oos = new ObjectOutputStream(new FileOutputStream("object.dat"));
+            //2.
+            oos.writeObject(new String("我爱北京天安门"));
+            oos.flush();//刷新操作
+
+            oos.writeObject(new Person("王泰雅",23));
+            oos.flush();
+
+            oos.writeObject(new Person("王泰雅2",25,new Account(5000)));
+            oos.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+            //3.
+            if(oos != null)
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+
+    }
+
+    /**
+     * 反序列化过程：将磁盘文件中的对象还原为内存中的一个java对象
+     * 使用ObjectInputStream来实现
+     */
+    @Test
+    public void testObjectInputStream(){
+        ObjectInputStream ois = null;
+        try {
+            ois = new ObjectInputStream(new FileInputStream("object.dat"));
+
+            Object obj = ois.readObject();
+            String str = (String) obj;
+
+            Person p = (Person) ois.readObject();
+            Person p1 = (Person) ois.readObject();
+
+
+            System.out.println(str);
+            System.out.println(p);
+            System.out.println(p1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if(ois != null)
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+
+
+    }
+
+
+}
+
+```
+
+## （七）随机存取文件流-RandomAccessFile 类
+
+我们可以用RandomAccessFile这个类，来实现一个多线程断点下载的功能， 用过下载工具的朋友们都知道，下载前都会建立两个临时文件，一个是与 被下载文件大小相同的空文件，另一个是记录文件指针的位置文件，每次 暂停的时候，都会保存上一次的指针，然后断点下载的时候，会继续从上 一次的地方下载，从而实现断点下载或上传的功能，有兴趣的朋友们可以 自己实现下。
+
+![image-20211027164419407](JAVA高级.assets/image-20211027164419407.png)
+
+![image-20211027164428424](JAVA高级.assets/image-20211027164428424.png)
+
+### 1.读取文件内容
+
+```java
+RandomAccessFile raf = new RandomAccessFile(“test.txt”, “rw”）;
+raf.seek(5);
+byte [] b = new byte[1024];
+int off = 0;
+int len = 5;
+raf.read(b, off, len);
+String str = new String(b, 0, len);
+System.out.println(str);
+raf.close();
+```
+
+### 2.写入文件内容
+
+```java
+RandomAccessFile raf = new RandomAccessFile("test.txt", "rw");
+raf.seek(5);
+//先读出来
+String temp = raf.readLine();
+raf.seek(5);
+raf.write("xyz".getBytes());
+raf.write(temp.getBytes());
+raf.close();
+```
+
+### 3.小结
+
+```java
+package com.taiacloud.java3;
+
+import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
+/**
+ * RandomAccessFile的使用
+ * 1.RandomAccessFile直接继承于java.lang.Object类，实现了DataInput和DataOutput接口
+ * 2.RandomAccessFile既可以作为一个输入流，又可以作为一个输出流
+ *
+ * 3.如果RandomAccessFile作为输出流时，写出到的文件如果不存在，则在执行过程中自动创建。
+ *   如果写出到的文件存在，则会对原有文件内容进行覆盖。（默认情况下，从头覆盖）
+ *
+ * 4. 可以通过相关的操作，实现RandomAccessFile“插入”数据的效果
+ *
+ * @author shkstart
+ * @create 2019 上午 11:18
+ */
+public class RandomAccessFileTest {
+
+    @Test
+    public void test1() {
+
+        RandomAccessFile raf1 = null;
+        RandomAccessFile raf2 = null;
+        try {
+            //1.
+            raf1 = new RandomAccessFile(new File("WeChat_pic_copy.jpg"),"r");//r只能读入
+            raf2 = new RandomAccessFile(new File("WeChat_pic_copy5.jpg.jpg"),"rw");//rw可以读入、输出
+            //2.
+            byte[] buffer = new byte[1024];
+            int len;
+            while((len = raf1.read(buffer)) != -1){
+                raf2.write(buffer,0,len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //3.
+            if(raf1 != null){
+                try {
+                    raf1.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            if(raf2 != null){
+                try {
+                    raf2.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
+    @Test
+    public void test2() throws IOException {
+
+        RandomAccessFile raf1 = new RandomAccessFile("hello.txt","rw");
+
+        raf1.seek(3);//将指针调到角标为3的位置
+        raf1.write("xyz".getBytes());//覆盖，默认为0
+
+        raf1.close();
+
+    }
+    /*
+    使用RandomAccessFile实现数据的插入效果
+     */
+    @Test
+    public void test3() throws IOException {
+
+        RandomAccessFile raf1 = new RandomAccessFile("hello.txt","rw");
+
+        raf1.seek(3);//将指针调到角标为3的位置
+
+        //保存指针3后面的所有数据到StringBuilder中
+        StringBuilder builder = new StringBuilder((int) new File("hello.txt").length());
+        byte[] buffer = new byte[20];
+        int len;
+        while((len = raf1.read(buffer)) != -1){
+            builder.append(new String(buffer,0,len)) ;
+        }
+
+        //调回指针，写入“xyz”
+        raf1.seek(3);
+        raf1.write("xyz".getBytes());
+
+        //将StringBuilder中的数据写入到文件中
+        raf1.write(builder.toString().getBytes());
+
+        raf1.close();
+
+        //思考：将StringBuilder替换为ByteArrayOutputStream
+    }
+}
+
+```
+
+## （八）NIO.2中Path、 Paths、Files类的使用
+
+### 1.Java NIO 概述
+
+![image-20211027165218336](JAVA高级.assets/image-20211027165218336.png)
+
+![image-20211027165228863](JAVA高级.assets/image-20211027165228863.png)
+
+### 2.Path、Paths和Files核心API
+
+![image-20211027165300138](JAVA高级.assets/image-20211027165300138.png)
+
+![image-20211027165310897](JAVA高级.assets/image-20211027165310897.png)
+
+#### 2.1Path接口
+
+![image-20211027165402500](JAVA高级.assets/image-20211027165402500.png)
+
+```java
+package com.taiacloud.java3;
+
+import org.junit.Test;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+/**
+ * 1. jdk 7.0 时，引入了 Path、Paths、Files三个类。
+ * 2.此三个类声明在：java.nio.file包下。
+ * 3.Path可以看做是java.io.File类的升级版本。也可以表示文件或文件目录，与平台无关
+ * <p>
+ * 4.如何实例化Path:使用Paths.
+ * static Path get(String first, String … more) : 用于将多个字符串串连成路径
+ * static Path get(URI uri): 返回指定uri对应的Path路径
+ *
+ * @author shkstart
+ * @create 2019 下午 2:44
+ */
+public class PathTest {
+
+    //如何使用Paths实例化Path
+    @Test
+    public void test1() {
+        Path path1 = Paths.get("d:\\nio\\hello.txt");//new File(String filepath)
+
+        Path path2 = Paths.get("d:\\", "nio\\hello.txt");//new File(String parent,String filename);
+
+        System.out.println(path1);
+        System.out.println(path2);
+
+        Path path3 = Paths.get("d:\\", "nio");
+        System.out.println(path3);
+    }
+
+    //Path中的常用方法
+    @Test
+    public void test2() {
+        Path path1 = Paths.get("d:\\", "nio\\nio1\\nio2\\hello.txt");
+        Path path2 = Paths.get("hello.txt");
+
+//		String toString() ： 返回调用 Path 对象的字符串表示形式
+        System.out.println(path1);
+
+//		boolean startsWith(String path) : 判断是否以 path 路径开始
+        System.out.println(path1.startsWith("d:\\nio"));
+//		boolean endsWith(String path) : 判断是否以 path 路径结束
+        System.out.println(path1.endsWith("hello.txt"));
+//		boolean isAbsolute() : 判断是否是绝对路径
+        System.out.println(path1.isAbsolute() + "~");
+        System.out.println(path2.isAbsolute() + "~");
+//		Path getParent() ：返回Path对象包含整个路径，不包含 Path 对象指定的文件路径
+        System.out.println(path1.getParent());
+        System.out.println(path2.getParent());
+//		Path getRoot() ：返回调用 Path 对象的根路径
+        System.out.println(path1.getRoot());
+        System.out.println(path2.getRoot());
+//		Path getFileName() : 返回与调用 Path 对象关联的文件名
+        System.out.println(path1.getFileName() + "~");
+        System.out.println(path2.getFileName() + "~");
+//		int getNameCount() : 返回Path 根目录后面元素的数量
+//		Path getName(int idx) : 返回指定索引位置 idx 的路径名称
+        for (int i = 0; i < path1.getNameCount(); i++) {
+            System.out.println(path1.getName(i) + "*****");
+        }
+
+//		Path toAbsolutePath() : 作为绝对路径返回调用 Path 对象
+        System.out.println(path1.toAbsolutePath());
+        System.out.println(path2.toAbsolutePath());
+//		Path resolve(Path p) :合并两个路径，返回合并后的路径对应的Path对象
+        Path path3 = Paths.get("d:\\", "nio");
+        Path path4 = Paths.get("nioo\\hi.txt");
+        path3 = path3.resolve(path4);
+        System.out.println(path3);
+
+//		File toFile(): 将Path转化为File类的对象
+        File file = path1.toFile();//Path--->File的转换
+
+        Path newPath = file.toPath();//File--->Path的转换
+
+    }
+
+
+}
+
+```
+
+
+
+#### 2.2Files 类
+
+![image-20211027165426650](JAVA高级.assets/image-20211027165426650.png)
+
+![image-20211027165436112](JAVA高级.assets/image-20211027165436112.png)
+
+```java
+package com.taiacloud.java3;
+
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.*;
+import java.util.Iterator;
+
+/**
+ * Files工具类的使用：操作文件或目录的工具类
+ * @author shkstart
+ * @create 2019 下午 2:44
+ */
+public class FilesTest {
+
+	@Test
+	public void test1() throws IOException{
+		Path path1 = Paths.get("d:\\nio", "hello.txt");
+		Path path2 = Paths.get("atguigu.txt");
+		
+//		Path copy(Path src, Path dest, CopyOption … how) : 文件的复制
+		//要想复制成功，要求path1对应的物理上的文件存在。path1对应的文件没有要求。
+//		Files.copy(path1, path2, StandardCopyOption.REPLACE_EXISTING);
+		
+//		Path createDirectory(Path path, FileAttribute<?> … attr) : 创建一个目录
+		//要想执行成功，要求path对应的物理上的文件目录不存在。一旦存在，抛出异常。
+		Path path3 = Paths.get("d:\\nio\\nio1");
+//		Files.createDirectory(path3);
+		
+//		Path createFile(Path path, FileAttribute<?> … arr) : 创建一个文件
+		//要想执行成功，要求path对应的物理上的文件不存在。一旦存在，抛出异常。
+		Path path4 = Paths.get("d:\\nio\\hi.txt");
+//		Files.createFile(path4);
+		
+//		void delete(Path path) : 删除一个文件/目录，如果不存在，执行报错
+//		Files.delete(path4);
+		
+//		void deleteIfExists(Path path) : Path对应的文件/目录如果存在，执行删除.如果不存在，正常执行结束
+		Files.deleteIfExists(path3);
+		
+//		Path move(Path src, Path dest, CopyOption…how) : 将 src 移动到 dest 位置
+		//要想执行成功，src对应的物理上的文件需要存在，dest对应的文件没有要求。
+//		Files.move(path1, path2, StandardCopyOption.ATOMIC_MOVE);
+		
+//		long size(Path path) : 返回 path 指定文件的大小
+		long size = Files.size(path2);
+		System.out.println(size);
+
+	}
+
+	@Test
+	public void test2() throws IOException{
+		Path path1 = Paths.get("d:\\nio", "hello.txt");
+		Path path2 = Paths.get("atguigu.txt");
+//		boolean exists(Path path, LinkOption … opts) : 判断文件是否存在
+		System.out.println(Files.exists(path2, LinkOption.NOFOLLOW_LINKS));
+
+//		boolean isDirectory(Path path, LinkOption … opts) : 判断是否是目录
+		//不要求此path对应的物理文件存在。
+		System.out.println(Files.isDirectory(path1, LinkOption.NOFOLLOW_LINKS));
+
+//		boolean isRegularFile(Path path, LinkOption … opts) : 判断是否是文件
+
+//		boolean isHidden(Path path) : 判断是否是隐藏文件
+		//要求此path对应的物理上的文件需要存在。才可判断是否隐藏。否则，抛异常。
+//		System.out.println(Files.isHidden(path1));
+
+//		boolean isReadable(Path path) : 判断文件是否可读
+		System.out.println(Files.isReadable(path1));
+//		boolean isWritable(Path path) : 判断文件是否可写
+		System.out.println(Files.isWritable(path1));
+//		boolean notExists(Path path, LinkOption … opts) : 判断文件是否不存在
+		System.out.println(Files.notExists(path1, LinkOption.NOFOLLOW_LINKS));
+	}
+
+	/**
+	 * StandardOpenOption.READ:表示对应的Channel是可读的。
+	 * StandardOpenOption.WRITE：表示对应的Channel是可写的。
+	 * StandardOpenOption.CREATE：如果要写出的文件不存在，则创建。如果存在，忽略
+	 * StandardOpenOption.CREATE_NEW：如果要写出的文件不存在，则创建。如果存在，抛异常
+	 *
+	 * @author shkstart 邮箱：shkstart@126.com
+	 * @throws IOException
+	 */
+	@Test
+	public void test3() throws IOException{
+		Path path1 = Paths.get("d:\\nio", "hello.txt");
+
+//		InputStream newInputStream(Path path, OpenOption…how):获取 InputStream 对象
+		InputStream inputStream = Files.newInputStream(path1, StandardOpenOption.READ);
+
+//		OutputStream newOutputStream(Path path, OpenOption…how) : 获取 OutputStream 对象
+		OutputStream outputStream = Files.newOutputStream(path1, StandardOpenOption.WRITE,StandardOpenOption.CREATE);
+
+
+//		SeekableByteChannel newByteChannel(Path path, OpenOption…how) : 获取与指定文件的连接，how 指定打开方式。
+		SeekableByteChannel channel = Files.newByteChannel(path1, StandardOpenOption.READ,StandardOpenOption.WRITE,StandardOpenOption.CREATE);
+
+//		DirectoryStream<Path>  newDirectoryStream(Path path) : 打开 path 指定的目录
+		Path path2 = Paths.get("e:\\teach");
+		DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path2);
+		Iterator<Path> iterator = directoryStream.iterator();
+		while(iterator.hasNext()){
+			System.out.println(iterator.next());
+		}
+
+
+	}
+}
+
+```
+
+
+
+# 七、网络编程
+
