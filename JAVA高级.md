@@ -6806,7 +6806,662 @@ public class FilesTest {
 
 ```
 
-
-
 # 七、网络编程
+
+## （一）网络编程概述
+
+- Java是 Internet 上的语言，它从语言级上提供了对网络应用程 序的支持，程序员能够很容易开发常见的网络应用程序。 
+- Java提供的网络类库，可以实现无痛的网络连接，联网的底层 细节被隐藏在 Java 的本机安装系统里，由 JVM 进行控制。并 且 Java 实现了一个跨平台的网络库，程序员面对的是一个统一 的网络编程环境。
+
+![image-20211027195912024](JAVA高级.assets/image-20211027195912024.png)
+
+## （二）网络通信要素
+
+### 1.概述
+
+![image-20211027195955358](JAVA高级.assets/image-20211027195955358.png)
+
+![image-20211027200006758](JAVA高级.assets/image-20211027200006758.png)
+
+![image-20211027200015837](JAVA高级.assets/image-20211027200015837.png)
+
+### 2.通信要素1： IP和端口号
+
+#### 2.1IP 地址
+
+![image-20211027200103301](JAVA高级.assets/image-20211027200103301.png)
+
+#### 2.2端口号
+
+![image-20211027200126186](JAVA高级.assets/image-20211027200126186.png)
+
+#### 2.3InetAddress类
+
+![image-20211027200230130](JAVA高级.assets/image-20211027200230130.png)
+
+![image-20211027200246784](JAVA高级.assets/image-20211027200246784.png)
+
+```java
+package com.taiacloud.java;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+/**
+ * 一、网络编程中有两个主要的问题：
+ * 1.如何准确地定位网络上一台或多台主机；定位主机上的特定的应用
+ * 2.找到主机后如何可靠高效地进行数据传输
+ *
+ * 二、网络编程中的两个要素：
+ * 1.对应问题一：IP和端口号
+ * 2.对应问题二：提供网络通信协议：TCP/IP参考模型（应用层、传输层、网络层、物理+数据链路层）
+ *
+ *
+ * 三、通信要素一：IP和端口号
+ *
+ * 1. IP:唯一的标识 Internet 上的计算机（通信实体）
+ * 2. 在Java中使用InetAddress类代表IP
+ * 3. IP分类：IPv4 和 IPv6 ; 万维网 和 局域网
+ * 4. 域名:   www.baidu.com   www.mi.com  www.sina.com  www.jd.com
+ *            www.vip.com
+ * 5. 本地回路地址：127.0.0.1 对应着：localhost
+ *
+ * 6. 如何实例化InetAddress:两个方法：getByName(String host) 、 getLocalHost()
+ *        两个常用方法：getHostName() / getHostAddress()
+ *
+ * 7. 端口号：正在计算机上运行的进程。
+ * 要求：不同的进程有不同的端口号
+ * 范围：被规定为一个 16 位的整数 0~65535。
+ *
+ * 8. 端口号与IP地址的组合得出一个网络套接字：Socket
+ * @author taia
+ * @create 2021 下午 19:21
+ */
+public class InetAddressTest {
+
+    public static void main(String[] args) {
+
+        try {
+            //File file = new File("hello.txt");
+            InetAddress inet1 = InetAddress.getByName("192.168.10.14");
+
+            System.out.println(inet1);
+
+            InetAddress inet2 = InetAddress.getByName("www.atguigu.com");
+            System.out.println(inet2);
+
+            InetAddress inet3 = InetAddress.getByName("127.0.0.1");
+            System.out.println(inet3);
+
+            //获取本地ip
+            InetAddress inet4 = InetAddress.getLocalHost();
+            System.out.println(inet4);
+
+            //getHostName()
+            System.out.println(inet2.getHostName());
+            //getHostAddress()
+            System.out.println(inet2.getHostAddress());
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+}
+
+```
+
+### 3.通信要素2：网络协议
+
+#### 3.1概述
+
+![image-20211027200426140](JAVA高级.assets/image-20211027200426140.png)
+
+![image-20211027200438487](JAVA高级.assets/image-20211027200438487.png)
+
+![image-20211027200450575](JAVA高级.assets/image-20211027200450575.png)
+
+#### 3.2TCP三次握手四次挥手
+
+![image-20211027200501481](JAVA高级.assets/image-20211027200501481.png)
+
+![image-20211027200511651](JAVA高级.assets/image-20211027200511651.png)
+
+#### 3.3Socket
+
+![image-20211027200631128](JAVA高级.assets/image-20211027200631128.png)
+
+![image-20211027200642102](JAVA高级.assets/image-20211027200642102.png)
+
+## （三）TCP网络编程
+
+![image-20211027200830842](JAVA高级.assets/image-20211027200830842.png)
+
+### 1.客户端Socket
+
+#### 1.1客户端Socket的工作过程
+
+![image-20211027200905304](JAVA高级.assets/image-20211027200905304.png)
+
+#### 1.2客户端创建Socket对象
+
+![image-20211027200948288](JAVA高级.assets/image-20211027200948288.png)
+
+### 2.服务器ServerSocket
+
+#### 2.1服务器程序的工作过程
+
+![image-20211027201043801](JAVA高级.assets/image-20211027201043801.png)
+
+#### 2.2服务器建立 ServerSocket 对象
+
+![image-20211027201108955](JAVA高级.assets/image-20211027201108955.png)
+
+### 3.例题
+
+3.1客户端发送内容给服务端，服务端将内容打印到控制台上。
+
+```java
+package com.taiacloud.java;
+
+import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+/**
+ * 实现TCP的网络编程
+ * 例子1：客户端发送信息给服务端，服务端将数据显示在控制台上
+ *
+ * @author taia
+ * @create 2021 下午 19:21
+ */
+public class TCPTest1 {
+
+    //客户端
+    @Test
+    public void client()  {
+        Socket socket = null;
+        OutputStream os = null;
+        try {
+            //1.创建Socket对象，指明服务器端的ip和端口号
+            InetAddress inet = InetAddress.getByName("127.0.0.1");
+            socket = new Socket(inet,8899);
+            //2.获取一个输出流，用于输出数据
+            os = socket.getOutputStream();
+            //3.写出数据的操作
+            os.write("你好，我是客户端mm".getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //4.资源的关闭
+            if(os != null){
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            if(socket != null){
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+
+
+    }
+    //服务端
+    @Test
+    public void server()  {
+
+        ServerSocket ss = null;
+        Socket socket = null;
+        InputStream is = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            //1.创建服务器端的ServerSocket，指明自己的端口号
+            ss = new ServerSocket(8899);
+            //2.调用accept()表示接收来自于客户端的socket
+            socket = ss.accept();
+            //3.获取输入流
+            is = socket.getInputStream();
+
+            //不建议这样写，可能会有乱码
+//        byte[] buffer = new byte[1024];
+//        int len;
+//        while((len = is.read(buffer)) != -1){
+//            String str = new String(buffer,0,len);
+//            System.out.print(str);
+//        }
+            //4.读取输入流中的数据
+            baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[5];
+            int len;
+            while((len = is.read(buffer)) != -1){
+                baos.write(buffer,0,len);
+            }
+
+            System.out.println(baos.toString());
+
+            System.out.println("收到了来自于：" + socket.getInetAddress().getHostAddress() + "的数据");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(baos != null){
+                //5.关闭资源
+                try {
+                    baos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(is != null){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(socket != null){
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(ss != null){
+                try {
+                    ss.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+    }
+
+}
+
+```
+
+3.2客户端发送文件给服务端，服务端将文件保存在本地。
+
+```java
+package com.taiacloud.java;
+
+import org.junit.Test;
+
+import java.io.*;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+/**
+ *
+ * 实现TCP的网络编程
+ * 例题2：客户端发送文件给服务端，服务端将文件保存在本地。
+ *
+ * @author taia
+ * @create 2021 下午 19:21
+ */
+public class TCPTest2 {
+
+    /*
+    这里涉及到的异常，应该使用try-catch-finally处理
+     */
+    @Test
+    public void client() throws IOException {
+        //1.
+        Socket socket = new Socket(InetAddress.getByName("127.0.0.1"),9090);
+        //2.
+        OutputStream os = socket.getOutputStream();
+        //3.
+        FileInputStream fis = new FileInputStream(new File("beauty.jpg"));
+        //4.
+        byte[] buffer = new byte[1024];
+        int len;
+        while((len = fis.read(buffer)) != -1){
+            os.write(buffer,0,len);
+        }
+        //5.
+        fis.close();
+        os.close();
+        socket.close();
+    }
+
+    /*
+    这里涉及到的异常，应该使用try-catch-finally处理
+     */
+    @Test
+    public void server() throws IOException {
+        //1.
+        ServerSocket ss = new ServerSocket(9090);
+        //2.
+        Socket socket = ss.accept();
+        //3.
+        InputStream is = socket.getInputStream();
+        //4.
+        FileOutputStream fos = new FileOutputStream(new File("beauty1.jpg"));
+        //5.
+        byte[] buffer = new byte[1024];
+        int len;
+        while((len = is.read(buffer)) != -1){
+            fos.write(buffer,0,len);
+        }
+        //6.
+        fos.close();
+        is.close();
+        socket.close();
+        ss.close();
+
+    }
+}
+
+```
+
+3.3从客户端发送文件给服务端
+
+```java
+package com.taiacloud.java;
+
+import org.junit.Test;
+
+import java.io.*;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+/**
+ * 实现TCP的网络编程
+ * 例题3：从客户端发送文件给服务端，服务端保存到本地。并返回“发送成功”给客户端。
+ * 并关闭相应的连接。
+ * @author shkstart
+ * @create 2019 下午 4:13
+ */
+public class TCPTest3 {
+
+    /*
+        这里涉及到的异常，应该使用try-catch-finally处理
+         */
+    @Test
+    public void client() throws IOException {
+        //1.
+        Socket socket = new Socket(InetAddress.getByName("127.0.0.1"),9090);
+        //2.
+        OutputStream os = socket.getOutputStream();
+        //3.
+        FileInputStream fis = new FileInputStream(new File("beauty.jpg"));
+        //4.
+        byte[] buffer = new byte[1024];
+        int len;
+        while((len = fis.read(buffer)) != -1){
+            os.write(buffer,0,len);
+        }
+        //关闭数据的输出
+        socket.shutdownOutput();
+
+        //5.接收来自于服务器端的数据，并显示到控制台上
+        InputStream is = socket.getInputStream();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] bufferr = new byte[20];
+        int len1;
+        while((len1 = is.read(buffer)) != -1){
+            baos.write(buffer,0,len1);
+        }
+
+        System.out.println(baos.toString());
+
+        //6.
+        fis.close();
+        os.close();
+        socket.close();
+        baos.close();
+    }
+
+    /*
+    这里涉及到的异常，应该使用try-catch-finally处理
+     */
+    @Test
+    public void server() throws IOException {
+        //1.
+        ServerSocket ss = new ServerSocket(9090);
+        //2.
+        Socket socket = ss.accept();
+        //3.
+        InputStream is = socket.getInputStream();
+        //4.
+        FileOutputStream fos = new FileOutputStream(new File("beauty2.jpg"));
+        //5.
+        byte[] buffer = new byte[1024];
+        int len;
+        while((len = is.read(buffer)) != -1){
+            fos.write(buffer,0,len);
+        }
+
+        System.out.println("图片传输完成");
+
+        //6.服务器端给予客户端反馈
+        OutputStream os = socket.getOutputStream();
+        os.write("你好，美女，照片我已收到，非常漂亮！".getBytes());
+
+        //7.
+        fos.close();
+        is.close();
+        socket.close();
+        ss.close();
+        os.close();
+
+    }
+}
+
+```
+
+## （四）UDP网络编程
+
+### 1.UDP网络通信概述
+
+- 类 DatagramSocket 和 DatagramPacket 实现了基于 UDP 协议网络程序。 
+- UDP数据报通过数据报套接字 DatagramSocket 发送和接收，系统不保证 UDP数据报一定能够安全送到目的地，也不能确定什么时候可以抵达。 
+- DatagramPacket 对象封装了UDP数据报，在数据报中包含了发送端的IP 地址和端口号以及接收端的IP地址和端口号。 
+- UDP协议中每个数据报都给出了完整的地址信息，因此无须建立发送方和 接收方的连接。如同发快递包裹一样。
+
+### 2.DatagramSocket 类的常用方法
+
+![image-20211027201504227](JAVA高级.assets/image-20211027201504227.png)
+
+![image-20211027201515775](JAVA高级.assets/image-20211027201515775.png)
+
+### 3.UDP网络通信流程
+
+![image-20211027201541733](JAVA高级.assets/image-20211027201541733.png)
+
+### 4.发送端
+
+```java
+//发送端
+    @Test
+    public void sender() throws IOException {
+
+        DatagramSocket socket = new DatagramSocket();
+        String str = "我是UDP方式发送的导弹";
+        byte[] data = str.getBytes();
+        InetAddress inet = InetAddress.getLocalHost();
+        DatagramPacket packet = new DatagramPacket(data,0,data.length,inet,9090);
+
+        socket.send(packet);
+
+        socket.close();
+
+    }
+```
+
+
+
+### 5.接收端
+
+```java
+ //接收端
+    @Test
+    public void receiver() throws IOException {
+
+        DatagramSocket socket = new DatagramSocket(9090);
+
+        byte[] buffer = new byte[100];
+        DatagramPacket packet = new DatagramPacket(buffer,0,buffer.length);
+
+        socket.receive(packet);
+
+        System.out.println(new String(packet.getData(),0,packet.getLength()));
+
+        socket.close();
+    }
+```
+
+## （五）URL编程
+
+### 1.URL类
+
+#### 1.1概述
+
+![image-20211027201821042](JAVA高级.assets/image-20211027201821042.png)
+
+#### 1.2构造器
+
+![image-20211027201839394](JAVA高级.assets/image-20211027201839394.png)
+
+#### 1.3常用方法
+
+```java
+package com.taiacloud.java;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+/**
+ * URL网络编程
+ * 1.URL:统一资源定位符，对应着互联网的某一资源地址
+ * 2.格式：
+ *  http://localhost:8080/examples/beauty.jpg?username=Tom
+ *  协议   主机名    端口号  资源地址           参数列表
+ *
+ * @author taia
+ * @create 2021 下午 4:47
+ */
+public class URLTest {
+
+    public static void main(String[] args) {
+
+        try {
+
+            URL url = new URL("http://localhost:8080/examples/beauty.jpg?username=Tom");
+
+//            public String getProtocol(  )     获取该URL的协议名
+            System.out.println(url.getProtocol());
+//            public String getHost(  )           获取该URL的主机名
+            System.out.println(url.getHost());
+//            public String getPort(  )            获取该URL的端口号
+            System.out.println(url.getPort());
+//            public String getPath(  )           获取该URL的文件路径
+            System.out.println(url.getPath());
+//            public String getFile(  )             获取该URL的文件名
+            System.out.println(url.getFile());
+//            public String getQuery(   )        获取该URL的查询名
+            System.out.println(url.getQuery());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+```
+
+### 2.URLConnection类
+
+![image-20211027202042801](JAVA高级.assets/image-20211027202042801.png)
+
+![image-20211027202052312](JAVA高级.assets/image-20211027202052312.png)
+
+![image-20211027202102633](JAVA高级.assets/image-20211027202102633.png)
+
+```java
+package com.taiacloud.java;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+/**
+ * @author taia
+ * @create 2021 下午 4:54
+ */
+public class URLTest1 {
+
+    public static void main(String[] args) {
+
+        HttpURLConnection urlConnection = null;
+        InputStream is = null;
+        FileOutputStream fos = null;
+        try {
+            URL url = new URL("https://www.bilibili.com/video/BV1Kb411W75N?p=630&spm_id_from=pageDriver");
+
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            urlConnection.connect();
+
+            is = urlConnection.getInputStream();
+            fos = new FileOutputStream("day10\\beauty3.mp4");
+
+            byte[] buffer = new byte[1024];
+            int len;
+            while((len = is.read(buffer)) != -1){
+                fos.write(buffer,0,len);
+            }
+
+            System.out.println("下载完成");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //关闭资源
+            if(is != null){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(fos != null){
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(urlConnection != null){
+                urlConnection.disconnect();
+            }
+        }
+    }
+}
+
+```
+
+# 八、反射
 
