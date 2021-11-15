@@ -7465,3 +7465,923 @@ public class URLTest1 {
 
 # 八、反射
 
+## （一）Java反射机制概述
+
+### 1.Java Reflection 概述
+
+![image-20211115134819519](JAVA高级.assets/image-20211115134819519.png)
+
+### 2.动态语言 vs 静态语言
+
+![image-20211115134850834](JAVA高级.assets/image-20211115134850834.png)
+
+### 3.Java反射机制研究及应用
+
+![image-20211115134918189](JAVA高级.assets/image-20211115134918189.png)
+
+### 4.反射相关的主要API
+
+-  java.lang.Class:代表一个类 
+-  java.lang.reflect.Method:代表类的方法 
+-  java.lang.reflect.Field:代表类的成员变量 
+-  java.lang.reflect.Constructor:代表类的构造器
+
+### 5.使用反射代码对比
+
+```java
+//疑问1：通过直接new对象的方式或反射的方式都可以调用公共的结构，开发中到底用哪个？
+    /*
+    建议：直接用new的方式。
+    什么时候会使用：反射的方式。
+    反射的特征：动态性。
+     */
+    //疑问2：反射机制与面向对象中的封装性是否矛盾？如何看待这两种技术？
+    /*
+    不矛盾。
+    封装性：权限修饰是表示了那些结构建议用，哪些不建议用
+    反射：可以用。
+     */
+     
+    //反射之前，对于Person类的操作
+    @Test
+    public void test1() {
+        //1.创建Person类的对象
+        Person p1 = new Person("Tom", 12);
+        //2.通过对象调用其内部的属性、方法
+        p1.age = 10;
+        System.out.println(p1.toString());
+        p1.show();
+        //在Person类外部，不可以通过Person类的对象调用其私有的结构。
+        //比如：name、showNation以及私有的构造器
+
+    }
+
+
+    //反射之后，对于Person类的操作
+    @Test
+    public void test2() throws Exception {
+        Class clazz = Person.class;
+        //1.通过反射创建Person类的对象
+        Constructor cons = clazz.getConstructor(String.class, int.class);
+
+        Object obj = cons.newInstance("Tom", 12);
+        Person p = (Person) obj;
+        System.out.println(p.toString());
+
+        //2.通过反射，调用对象指定的属性和方法
+        //调用属性
+        Field age = clazz.getDeclaredField("age");
+        age.set(p, 10);
+        System.out.println(p.toString());
+        //调用方法
+        Method show = clazz.getDeclaredMethod("show");
+        show.invoke(p);
+
+        //通过反射，可以调用Person类的私有结构的。比如：私有的构造器、方法、属性
+        //调用私有的构造器
+        Constructor cons1 = clazz.getDeclaredConstructor(String.class);
+        cons1.setAccessible(true);
+        Person p1 = (Person) cons1.newInstance("Jerry");
+        System.out.println(p1);
+        //调用私有的属性
+        Field name = clazz.getDeclaredField("name");
+        name.setAccessible(true);
+        name.set(p1, "HanMeiMei");
+        System.out.println(p1);
+        //调用私有的方法
+        Method showNation = clazz.getDeclaredMethod("showNation", String.class);
+        showNation.setAccessible(true);
+        String nation = (String) showNation.invoke(p1, "中国");//相当于String nation = p1.showNation("中国")
+        System.out.println(nation);
+    }
+```
+
+
+
+## （二）Class类
+
+### 1.Class类简介
+
+![image-20211115135231083](JAVA高级.assets/image-20211115135231083.png)
+
+![image-20211115135244694](JAVA高级.assets/image-20211115135244694.png)
+
+```java
+/**
+     * 关于java.lang.Class类的理解
+     * 1.类的加载过程：
+     *  程序经过javac.exe命令之后，会生成一个或多个字节码文件（.class）。
+     *  接着我们使用java.exe命令对某个字节码文件进行解释运行。相当于将某个字节码文件加载到内存中。此过程就称为类的加载。
+     *  加载到内存中的类就称为运行时类，此运行时类，就作为Class的一个实例。
+     * 2.换句话说，Class的实例就对应着一个运行时类。
+     * 3.加载到内存中的运行时类，会缓存一定的时间，在此时间之内，我们可以通过不同的方式来获取此运行时类。
+     */
+```
+
+
+
+### 2.Class类的常用方法
+
+![image-20211115135310865](JAVA高级.assets/image-20211115135310865.png)
+
+### 3.获取Class类的四种方法
+
+![image-20211115135348161](JAVA高级.assets/image-20211115135348161.png)
+
+```java
+/**
+     * 获取Class实例的方式（前三种方式需要掌握）
+     */
+    @Test
+    public void test3() throws ClassNotFoundException {
+        //方式一：调用运行时类的属性：.class
+        Class clazz1 = Person.class;
+        System.out.println(clazz1);
+
+        //方式二：通过运行时类的对象,调用getClass()
+        Person p1 = new Person();
+        Class clazz2 = p1.getClass();
+        System.out.println(clazz2);
+
+        //方式三：调用Class的静态方法：forName(String classPath)*
+        Class clazz3 = Class.forName("com.taiacloud.java.Person");
+//        clazz3 = Class.forName("java.lang.String");
+        System.out.println(clazz3);
+
+        System.out.println(clazz1 == clazz2);//true
+        System.out.println(clazz1 == clazz3);//true
+
+        //方式四：类的加载器：ClassLoader
+        ClassLoader classLoader = ReflectionTest.class.getClassLoader();
+        Class clazz4 = classLoader.loadClass("com.taiacloud.java.Person");
+        System.out.println(clazz4);
+
+        System.out.println(clazz1 == clazz4);//true
+    }
+```
+
+### 4.哪些类型可以有Class对象
+
+![image-20211115135514769](JAVA高级.assets/image-20211115135514769.png)
+
+```java
+/**
+     * 哪些类型可以有Class对象
+     */
+    @Test
+    public void test4() {
+        Class c1 = Object.class;
+        Class c2 = Comparable.class;
+        Class c3 = String[].class;
+        Class c4 = int[][].class;
+        Class c5 = ElementType.class;
+        Class c6 = Override.class;
+        Class c7 = int.class;
+        Class c8 = void.class;
+        Class c9 = Class.class;
+
+        int[] a = new int[10];
+        int[] b = new int[100];
+        Class c10 = a.getClass();
+        Class c11 = b.getClass();
+        // 只要数组的元素类型与维度一样，就是同一个Class
+        System.out.println(c10 == c11);
+    }
+```
+
+
+
+## （三）ClassLoader
+
+### 1.类的加载过程
+
+![image-20211115135623333](JAVA高级.assets/image-20211115135623333.png)
+
+![image-20211115135632716](JAVA高级.assets/image-20211115135632716.png)
+
+### 2.ClassLoader
+
+![image-20211115135815982](JAVA高级.assets/image-20211115135815982.png)
+
+```java
+/**
+ * 了解类的加载器
+ */
+public class ClassLoaderTest {
+    @Test
+    public void test1(){
+        //1.对于自定义类，使用系统类加载器进行加载
+        ClassLoader classLoader = ClassLoaderTest.class.getClassLoader();
+        System.out.println(classLoader);
+        //2.调用系统类加载器的getParent()：获取扩展类加载器
+        ClassLoader classLoader1 = classLoader.getParent();
+        System.out.println(classLoader1);
+        //3.调用扩展类加载器的getParent()：无法获得引导类加载器
+        //引导类加载器主要负责加载java的核心类库，无法加载自定义类。
+        ClassLoader classLoader2 = classLoader1.getParent();
+        System.out.println(classLoader2);
+
+        ClassLoader classLoader3 = String.class.getClassLoader();
+        System.out.println(classLoader3);
+    }
+    /**
+     * Properties:用来读取配置文件
+     */
+    @Test
+    public void test2() throws Exception {
+        Properties pros = new Properties();
+        //此时的文件默认在当前的module下
+        //读取配置文件的方式一
+        FileInputStream fis = new FileInputStream("src\\jdbc1.properties");
+        pros.load(fis);
+
+        //此时的文件默认在当前module的src下
+        //读取配置文件的方式二:使用classLoader
+//        ClassLoader classLoader = ClassLoaderTest.class.getClassLoader();
+//        InputStream is = classLoader.getResourceAsStream("jdbc1.properties");
+//        pros.load(is);
+
+        String user = pros.getProperty("user");
+        String password = pros.getProperty("password");
+
+        System.out.println("user = " + user + "\tpassword = " + password);
+    }
+}
+```
+
+
+
+## （四）创建运行时类的对象
+
+![image-20211115135945028](JAVA高级.assets/image-20211115135945028.png)
+
+```java
+/**
+ * 通过反射创建对应的运行时类的对象
+ */
+public class NewInstanceTest {
+    @Test
+    public void test1() throws InstantiationException, IllegalAccessException {
+        Class<Person> clazz = Person.class;
+        /*
+        newInstance():调用此方法，创建对应的运行时类的对象。内部调用了运行时类的空参构造器。
+        要想此方法正常的创建运行时类的对象，要求：
+            1.运行时类必须提供空参构造器
+            2.空参构造器的访问权限足够，通常设置为public
+
+        在javabean中要求提供一个public的空参构造器。原因：
+            1.便于通过反射，创建运行时类的对象
+            2.便于子类继承此运行时类时，默认调用super（）时，保证父类有此构造器
+         */
+        Person person = clazz.newInstance();
+        System.out.println(person);
+    }
+
+
+    //体会反射的动态性
+    @Test
+    public void test2(){
+        for (int i = 0; i < 100; i++) {
+            int num = new Random().nextInt(3);//0,1,2
+            String classPath = "";
+            switch (num){
+                case 0 : classPath = "java.util.Date"; break;
+//            case 1 : classPath = "java.sql.Date"; break;//sql.Date中没有空参构造器，异常
+                case 1 : classPath = "java.lang.Object"; break;
+                case 2 : classPath = "com.taiacloud.java.Person"; break;
+            }
+
+            try {
+                Object obj = getInstance(classPath);
+                System.out.println(obj);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    /**
+     * 创建一个指定类的对象
+     * @param classPath：指定类的全类名
+     * @return
+     * @throws Exception
+     */
+    public Object getInstance(String classPath) throws Exception {
+        Class clazz = Class.forName(classPath);
+        return clazz.newInstance();
+    }
+}
+```
+
+
+
+## （五）获取运行时类的完整结构
+
+![image-20211115140213092](JAVA高级.assets/image-20211115140213092.png)
+
+### 1.获取当前运行时类的属性结构
+
+```java
+/**
+ * 获取当前运行时类的属性结构
+ */
+public class FiledTest {
+    @Test
+    public void test1(){
+        Class clazz = Person.class;
+
+        //获取属性结构
+
+        //getFields():获取当前运行时类及其父类中声明为public访问权限的属性
+        Field[] fields = clazz.getFields();
+        for (Field f : fields) {
+            System.out.println(f);
+        }
+
+        System.out.println("*****************************");
+
+        //getDeclaredFields():获取当前运行时类中声明的所有属性（不包含父类中声明的属性）
+        Field[] declaredFields = clazz.getDeclaredFields();
+        for (Field f : declaredFields) {
+            System.out.println(f);
+        }
+    }
+
+    //权限修饰符 数据类型 变量名
+    @Test
+    public void test2(){
+        Class clazz = Person.class;
+        Field[] declaredFields = clazz.getDeclaredFields();
+        for (Field f : declaredFields) {
+            //1.权限修饰符
+            int modifiers = f.getModifiers();
+            System.out.print(Modifier.toString(modifiers) + "\t");
+            //2.数据类型
+            Class<?> type = f.getType();
+            System.out.print(type.getName() + "\t");
+            //3.变量名
+            String name = f.getName();
+            System.out.print(name + "\t");
+
+            System.out.println();
+        }
+    }
+}
+```
+
+### 2.获取运行时类的方法结构
+
+```java
+package com.taiacloud.java2;
+
+import com.taiacloud.java1.Person;
+import org.junit.Test;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
+/**
+ * 获取运行时类的方法结构
+ */
+public class MethodTest {
+    @Test
+    public void test1(){
+        Class clazz = Person.class;
+
+        //获取方法结构
+
+        //getMethods():获取当前运行时类及其父类中声明为public访问权限的方法
+        Method[] methods = clazz.getMethods();
+        for(Method m : methods){
+            System.out.println(m);
+        }
+
+        System.out.println("*********************");
+        //getDeclaredMethods():获取当前运行时类中声明的所有方法（不包含父类中声明的方法）
+        Method[] declaredMethods = clazz.getDeclaredMethods();
+        for(Method m : declaredMethods){
+            System.out.println(m);
+        }
+    }
+
+    /**
+     * @Xxxx    //反射拿到注解需要注解的生命周期为runtime
+     * 权限修饰符    返回值类型   方法名（参数类型1 形参名1，...） throws XxxException{}
+     */
+
+    @Test
+    public void test2(){
+        Class clazz = Person.class;
+
+        Method[] declaredMethods = clazz.getDeclaredMethods();
+        for(Method m : declaredMethods){
+            //1.获取方法声明的注解
+            Annotation[] annotations = m.getAnnotations();
+            for(Annotation a : annotations){
+                System.out.println(a);
+            }
+
+            //2.权限修饰符
+            System.out.print(Modifier.toString(m.getModifiers()) + "\t");
+
+            //3.返回值类型
+            System.out.print(m.getReturnType().getName() + "\t");
+
+            //4.方法名
+            System.out.print(m.getName());
+            System.out.print("(");
+            //5.形参列表
+            Class[] parameterTypes = m.getParameterTypes();
+            if(!(parameterTypes == null && parameterTypes.length == 0)){
+                for(int i = 0;i < parameterTypes.length;i++){
+                    if(i == parameterTypes.length - 1){
+                        System.out.print(parameterTypes[i].getName() + "args_" + i);
+                        break;
+                    }
+                    System.out.print(parameterTypes[i].getName() + "args_" + i + ",");
+
+                }
+            }
+            System.out.print(")");
+
+            //6.抛出的异常
+            Class[] exceptionTypes = m.getExceptionTypes();
+
+            if(exceptionTypes.length > 0){
+                System.out.print(" throws ");
+                for(int i = 0;i < exceptionTypes.length;i++){
+                    if(i == exceptionTypes.length - 1){
+                        System.out.print(exceptionTypes[i].getName());
+                        break;
+                    }
+                    System.out.print(exceptionTypes[i].getName() + ",");
+                }
+            }
+
+            System.out.println();
+        }
+    }
+}
+
+```
+
+### 3.获取构造器结构
+
+```java
+ /**
+     * 获取构造器结构
+     */
+    @Test
+    public void test1() {
+        Class clazz = Person.class;
+        //getConstructors():获取当前运行时类中声明为public的构造器
+        Constructor[] constructors = clazz.getConstructors();
+        for (Constructor c : constructors) {
+            System.out.println(c);
+        }
+
+        //getDeclaredConstructors():获取当前运行时类中所有的构造器
+        Constructor[] declaredConstructors = clazz.getDeclaredConstructors();
+        for (Constructor c : declaredConstructors) {
+            System.out.println(c);
+        }
+    }
+```
+
+### 4.获取运行时类的父类
+
+```java
+/**
+     * 获取运行时类的父类
+     */
+    @Test
+    public void test2() {
+        Class clazz = Person.class;
+
+        Class superclass = clazz.getSuperclass();
+        System.out.println(superclass);
+    }
+
+    /**
+     * 获取运行时类的带泛型的父类
+     */
+    @Test
+    public void test3() {
+        Class clazz = Person.class;
+
+        Type genericSuperclass = clazz.getGenericSuperclass();
+        System.out.println(genericSuperclass);
+    }
+
+    /**
+     * 获取运行时类的带泛型的父类的泛型
+     * <p>
+     * 代码：逻辑代码 vs 功能代码
+     */
+    @Test
+    public void test4() {
+        Class clazz = Person.class;
+
+        Type genericSuperclass = clazz.getGenericSuperclass();
+        ParameterizedType paramType = (ParameterizedType) genericSuperclass;
+        //获取泛型类型
+        Type[] actualTypeArguments = paramType.getActualTypeArguments();
+        System.out.println(actualTypeArguments[0].getTypeName());
+        System.out.println(((Class) actualTypeArguments[0]).getName());
+    }
+```
+
+### 5.获取运行时类的接口
+
+```java
+ /**
+     * 获取运行时类的接口
+     */
+    @Test
+    public void test5() {
+        Class clazz = Person.class;
+        //当前类的所有实现的接口
+        Class[] interfaces = clazz.getInterfaces();
+        for (Class s : interfaces) {
+            System.out.println(s);
+        }
+
+        System.out.println();
+        //当前运行时类的父类所有实现的接口
+        Class[] interfaces1 = clazz.getSuperclass().getInterfaces();
+        for (Class s1 : interfaces1) {
+            System.out.println(s1);
+        }
+    }
+```
+
+### 6.获取运行时类所在的包
+
+```java
+/**
+     * 获取运行时类所在的包
+     */
+    @Test
+    public void test6(){
+        Class clazz = Person.class;
+
+        Package pack = clazz.getPackage();
+        System.out.println(pack);
+
+    }
+```
+
+### 7.获取运行时类声明的注解
+
+```java
+/**
+     * 获取运行时类声明的注解
+     */
+    @Test
+    public void test7(){
+        Class clazz = Person.class;
+
+        Annotation[] annotations = clazz.getAnnotations();
+        for (Annotation a : annotations) {
+            System.out.println(a);
+        }
+
+    }
+```
+
+
+
+## （六）调用运行时类的指定结构
+
+### 1.调用指定方法
+
+![image-20211115140730563](JAVA高级.assets/image-20211115140730563.png)
+
+![image-20211115140744299](JAVA高级.assets/image-20211115140744299.png)
+
+```java
+/**
+     * 运行时类的属性声明为public，不理想
+     */
+    @Test
+    public void testField() throws Exception {
+        Class clazz = Person.class;
+
+        //创建运行时类的对象
+        Person p = (Person) clazz.newInstance();
+
+        //获取指定的属性:要求运行时类的属性声明为public
+        //通常不采用此方法
+        Field id = clazz.getField("id");
+
+        //设置当前属性的值
+        //set():参数一：指明哪个对象的属性   参数二：将此属性值设置为多少
+        id.set(p,1001);
+
+        //获取当前属性的值
+        //get():参数：指明哪个对象的属性
+        int pId = (int) id.get(p);
+        System.out.println(pId);
+
+    }
+
+    /**
+     * 如何操作运行时类指定的属性 -- 掌握
+     * @throws Exception
+     */
+    @Test
+    public void testField1() throws Exception{
+        Class clazz = Person.class;
+
+        //创建运行时类的对象
+        Person p = (Person) clazz.newInstance();
+
+        //1.getDeclaredField(String fieldName):获取运行时类中指定变量名的属性
+        Field name = clazz.getDeclaredField("name");
+
+        //2.保证当前属性是可访问的
+        name.setAccessible(true);
+
+        //3.set name属性，get name属性   //实际需求
+        name.set(p,"Tom");
+        System.out.println(name.get(p));
+    }
+```
+
+
+
+### 2.调用指定属性
+
+![image-20211115140829774](JAVA高级.assets/image-20211115140829774.png)
+
+![image-20211115140841514](JAVA高级.assets/image-20211115140841514.png)
+
+```java
+/**
+     * 如何操作运行时类指定的方法 -- 掌握
+     */
+    @Test
+    public void testMethod() throws Exception{
+        Class clazz = Person.class;
+
+        //创建运行时类的对象
+        Person p = (Person) clazz.newInstance();
+
+        //1.获取指定的某个方法
+        //getDeclaredMethod():参数一：指定获取的方法名 参数二：指明获取的方法的形参列表
+        Method show = clazz.getDeclaredMethod("show", String.class);
+
+        //2.保证当前方法是可访问的
+        show.setAccessible(true);
+
+
+        //3.invoke():参数1：方法的调用者   参数2：给方法形参赋值的实参
+        //invoke()的返回值即为对应类中调用的方法的返回值
+        Object chn = show.invoke(p, "CHN");
+        System.out.println(chn);
+
+        System.out.println("*************************");
+
+        //private static void showDesc()
+        //调用静态方法
+
+        Method showDesc = clazz.getDeclaredMethod("showDesc");
+        showDesc.setAccessible(true);
+        //如果调用的运行时类中的方法没有返回值，则此invoke（）返回null
+        Object o = showDesc.invoke(Person.class);
+//        Object o1 = showDesc.invoke(clazz);
+        System.out.println(o);
+
+    }
+
+```
+
+
+
+### 3.调用指定构造器
+
+```java
+/**
+     * 如何操作运行时类指定的构造器
+     */
+    @Test
+    public void testConstructor() throws Exception{
+        Class clazz = Person.class;
+
+        // private Person(String name)
+        //1.获取指定的构造器
+        //getDeclaredConstructor(): 参数：指明构造器的参数列表
+        Constructor constructor = clazz.getDeclaredConstructor(String.class);
+
+        //2.保证此构造器是可访问的
+        constructor.setAccessible(true);
+
+        //3.调用此构造器创建运行时类的对象
+        Person person = (Person) constructor.newInstance("jjj");
+        System.out.println(person);
+
+
+    }
+```
+
+
+
+## （七）反射的应用：动态代理
+
+### 1.代理设计模式原理
+
+![image-20211115141203817](JAVA高级.assets/image-20211115141203817.png)
+
+### 2.静态代理
+
+```java
+package com.taiacloud.java3;
+
+/**
+ * 静态代理举例
+ * 特点：代理类和被代理类在编译期间，就确定下来了。
+ */
+interface  ClothFactory{
+    void produceCloth();
+}
+
+//代理类
+class ProxyClothFactory implements ClothFactory{
+
+    private ClothFactory factory;//就拿被代理类对象进行实例化
+
+    public ProxyClothFactory(ClothFactory factory){
+        this.factory = factory;
+    }
+
+    @Override
+    public void produceCloth() {
+        System.out.println("代理工厂做准备工作");
+
+        factory.produceCloth();
+
+        System.out.println("代理工厂做一些后续的收尾工作");
+    }
+}
+
+//被代理类
+class NikeClothFactory implements ClothFactory{
+
+    @Override
+    public void produceCloth() {
+        System.out.println("耐克生产运动服");
+    }
+}
+
+
+public class StaticProxyTest {
+    public static void main(String[] args) {
+        //创建被代理类的对象
+        ClothFactory nike = new NikeClothFactory();
+        //创建代理类的对象
+        ClothFactory proxyClothFactory = new ProxyClothFactory(nike);
+
+        proxyClothFactory.produceCloth();
+
+    }
+}
+
+```
+
+
+
+### 3.动态代理对比
+
+![image-20211115141241467](JAVA高级.assets/image-20211115141241467.png)
+
+### 4.动态代理相关API
+
+![image-20211115141251135](JAVA高级.assets/image-20211115141251135.png)
+
+### 5.动态代理步骤
+
+![image-20211115141303413](JAVA高级.assets/image-20211115141303413.png)
+
+![image-20211115141313042](JAVA高级.assets/image-20211115141313042.png)
+
+![image-20211115141322686](JAVA高级.assets/image-20211115141322686.png)
+
+![image-20211115141333663](JAVA高级.assets/image-20211115141333663.png)
+
+```java
+/**
+ * 动态代理的举例
+ */
+interface Human{
+    String getBelief();
+
+    void eat(String food);
+
+}
+//被代理类
+class SuperMan implements Human{
+
+    @Override
+    public String getBelief() {
+        return "I believe i can fly";
+    }
+
+    @Override
+    public void eat(String food) {
+        System.out.println("我喜欢吃" + food);
+    }
+}
+
+class HumanUtil{
+    public void method1(){
+        System.out.println("通用方法一*****************");
+    }
+
+    public void method2(){
+        System.out.println("通用方法二*****************");
+    }
+}
+
+/**
+ * 要想实现动态代理，需要解决的问题？
+ * 问题一：如何根据加载到内存中的被代理类，动态的创建一个代理类及其对象
+ * 问题二：当通过代理类的对象调用方法时，如何动态的去调用被代理类中的同名方法
+ */
+
+class ProxyFactory{
+    //调用此方法，返回一个代理类的对象。解决问题一。
+    public static Object getProxyInstance(Object obj){//obj:被代理类的对象
+        MyInvocationHandler handler = new MyInvocationHandler();
+
+        handler.bind(obj);
+
+        return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass().getInterfaces(),handler);
+    }
+}
+
+class MyInvocationHandler implements InvocationHandler{
+
+    private Object obj;//赋值时，也需要使用被代理类的对象进行赋值
+
+    public void bind(Object obj){
+        this.obj = obj;
+    }
+
+    /**
+     * 当我们通过代理类的对象，调用方法a时，就会自动的调用如下的方法：invoke()
+     * @param proxy
+     * @param method
+     * @param args
+     * @return
+     * @throws Throwable
+     */
+    //将被代理类要执行的方法a的功能声明在invoke()中
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+        HumanUtil util = new HumanUtil();
+        util.method1();
+
+
+        //method:即为代理类对象调用的方法，此方法也就作为了被代理类对象要调用的方法
+        //obj：被代理类的对象
+        Object returnValue = method.invoke(obj, args);
+
+        util.method2();
+
+        //上述方法的返回值就作为当前类中invoke（）的返回值。
+        return returnValue;
+    }
+}
+
+
+public class ProxyTest {
+    public static void main(String[] args) {
+        SuperMan superMan = new SuperMan();
+        //proxyInstance:代理类的对象
+        Human proxyInstance = (Human) ProxyFactory.getProxyInstance(superMan);
+        //当通过代理类对象调用方法时，会自动地调用被代理类中同名的方法
+        String belief = proxyInstance.getBelief();
+        System.out.println(belief);
+        proxyInstance.eat("麻辣烫");
+
+        System.out.println("********************");
+
+        NikeClothFactory nikeClothFactory = new NikeClothFactory();
+
+        ClothFactory proxyClothFactory = (ClothFactory) ProxyFactory.getProxyInstance(nikeClothFactory);
+
+        proxyClothFactory.produceCloth();
+    }
+}
+```
+
+
+
+### 6.动态代理与AOP（Aspect Orient Programming)
+
+![image-20211115141438001](JAVA高级.assets/image-20211115141438001.png)
+
+![image-20211115141449088](JAVA高级.assets/image-20211115141449088.png)
