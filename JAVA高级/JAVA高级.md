@@ -45,22 +45,20 @@
 
 Java语言的JVM允许程序运行多个线程，它通过java.lang.Thread 类来体现。
 
-#### 1.1Thread类的特性 
+#### 1.1Thread类的特性
 
 - 每个线程都是通过某个特定Thread对象的run()方法来完成操作的，经常 把run()方法的主体称为线程体 
 - 通过该Thread对象的start()方法来启动这个线程，而非直接调用run()
 
-#### 1.2构造器 
+#### 1.2构造器
 
 - Thread()：创建新的Thread对象 
 
 - Thread(String threadname)：创建线程并指定线程实例名
 
--  Thread(Runnable target)：指定创建线程的目标对象，它实现了Runnable接 口中的run方法 
+- Thread(Runnable target)：指定创建线程的目标对象，它实现了Runnable接 口中的run方法 
 
 - Thread(Runnable target, String name)：创建新的Thread对象
-
-  
 
 #### 1.3Thread类的有关方法
 
@@ -71,10 +69,10 @@ Java语言的JVM允许程序运行多个线程，它通过java.lang.Thread 类�
 - static Thread currentThread(): 返回当前线程。在Thread子类中就 是this，通常用于主线程和Runnable实现类
 - static void yield()：线程让步 
 - 暂停当前正在执行的线程，把执行机会让给优先级相同或更高的线程 若队列中没有同优先级的线程，忽略此方法
--  join() ：当某个程序执行流中调用其他线程的 join() 方法时，调用线程将 被阻塞，直到 join() 方法加入的 join 线程执行完为止（ 低优先级的线程也可以获得执行 ）
+- join() ：当某个程序执行流中调用其他线程的 join() 方法时，调用线程将 被阻塞，直到 join() 方法加入的 join 线程执行完为止（ 低优先级的线程也可以获得执行 ）
 - static void sleep(long millis)：(指定时间:毫秒)令当前活动线程在指定时间段内放弃对CPU控制,使其他线程有机会被执行,时间到后 重排队。抛出InterruptedException异常
--  stop(): 强制线程生命期结束，不推荐使用
--  boolean isAlive()：返回boolean，判断线程是否还活着
+- stop(): 强制线程生命期结束，不推荐使用
+- boolean isAlive()：返回boolean，判断线程是否还活着
 
 #### 1.4线程的优先级
 
@@ -184,16 +182,13 @@ public class ThreadMethodTest {
         System.out.println(thDemo3.isAlive());
     }
 }
-
 ```
-
-
 
 ### 2.创建线程方式一：继承Thread类
 
 #### 2.1创建流程
 
-1.  定义子类继承Thread类。 
+1. 定义子类继承Thread类。 
 2. 子类中重写Thread类中的run方法。
 3. 创建Thread子类对象，即创建了线程对象。 
 4. 调用线程对象start方法：启动线程，调用run方法。
@@ -257,7 +252,6 @@ public class ThreadTest {
 
     }
 }
-
 ```
 
 #### 2.2注意：
@@ -329,7 +323,6 @@ public class ThreadTest2 {
         t2.start();
     }
 }
-
 ```
 
 #### 3.2继承方式与实现方式的异同
@@ -341,7 +334,7 @@ public class Thread extends Object implements Runnable
 - 继承Thread：线程代码存放Thread子类run方法中。
 - 实现Runnable：线程代码存在接口的子类的run方法。
 
-##### 3.2.2实现方式的好处 
+##### 3.2.2实现方式的好处
 
 - 避免了单继承的局限性 
 - 多个线程可以共享同一个接口实现类的对象，非常适合多个相同线 程来处理同一份资源
@@ -411,16 +404,13 @@ public class ThreadNew {
 
     }
 }
-
 ```
-
-
 
 #### 4.2与使用Runnable相比
 
  Callable功能更强大些
 
--  相比run()方法，可以有返回值 
+- 相比run()方法，可以有返回值 
 - 方法可以抛出异常 
 - 支持泛型的返回值 
 - 需要借助FutureTask类，比如获取返回结果
@@ -515,7 +505,6 @@ public class ThreadPool {
 
     }
 }
-
 ```
 
 ## （三）线程的生命周期
@@ -643,16 +632,13 @@ public class WindowTest1 {
 class Dog{
 
 }
-
 ```
-
-
 
 #### 2.1同步代码块
 
 ```java
 synchronized (对象){ 
-	// 需要被同步的代码；
+    // 需要被同步的代码；
 }
 ```
 
@@ -662,7 +648,7 @@ synchronized还可以放在方法声明中，表示整个方法为同步方法
 
 ```java
 public synchronized void show (String name){
-	//。。。。。
+    //。。。。。
 }
 ```
 
@@ -672,26 +658,26 @@ public synchronized void show (String name){
 
 - 同步机制中的锁 在《Thinking in Java》中，是这么说的：对于并发工作，你需要某种方式来防 止两个任务访问相同的资源（其实就是共享资源竞争）。 防止这种冲突的方法 就是当资源被一个任务使用时，在其上加锁。第一个访问某项资源的任务必须 锁定这项资源，使其他任务在其被解锁之前，就无法访问它了，而在其被解锁 之时，另一个任务就可以锁定并使用它了。 
 
-##### 2.3.2synchronized的锁是什么？ 
+##### 2.3.2synchronized的锁是什么？
 
 - 任意对象都可以作为同步锁。所有对象都自动含有单一的锁（监视器）。 
 - 同步方法的锁：静态方法（类名.class）、非静态方法（this） 
 - 同步代码块：自己指定，很多时候也是指定为this或类名.class 
 
-##### 2.3.3注意 
+##### 2.3.3注意
 
 - 必须确保使用同一个资源的多个线程共用一把锁，这个非常重要，否则就 无法保证共享资源的安全 
 - 一个线程类中的所有静态方法共用同一把锁（类名.class），所有非静态方 法共用同一把锁（this），同步代码块（指定需谨慎）
 
 #### 2.4同步的范围
 
-##### 2.4.1如何找问题，即代码是否存在线程安全？（非常重要） 
+##### 2.4.1如何找问题，即代码是否存在线程安全？（非常重要）
 
 1. 明确哪些代码是多线程运行的代码 
 2. 明确多个线程是否有共享数据 
 3. 明确多线程运行代码中是否有多条语句操作共享数据
 
-##### 2.4.2如何解决呢？（非常重要） 
+##### 2.4.2如何解决呢？（非常重要）
 
 1. 对多条操作共享数据的语句，只能让一个线程都执行完，在执行过程中，其 他线程不可以参与执行。 
 2. 即所有操作共享数据的这些语句都要放在同步范围中 
@@ -751,71 +737,68 @@ public class SingletonTest {
 package com.taiacloud.java1;
 //死锁演示
 class A {
-	public synchronized void foo(B b) {
-		System.out.println("当前线程名: " + Thread.currentThread().getName()
-				+ " 进入了A实例的foo方法"); // ①
-		try {
-			Thread.sleep(200);
-		} catch (InterruptedException ex) {
-			ex.printStackTrace();
-		}
-		System.out.println("当前线程名: " + Thread.currentThread().getName()
-				+ " 企图调用B实例的last方法"); // ③
-		b.last();
-	}
+    public synchronized void foo(B b) {
+        System.out.println("当前线程名: " + Thread.currentThread().getName()
+                + " 进入了A实例的foo方法"); // ①
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("当前线程名: " + Thread.currentThread().getName()
+                + " 企图调用B实例的last方法"); // ③
+        b.last();
+    }
 
-	public synchronized void last() {
-		System.out.println("进入了A类的last方法内部");
-	}
+    public synchronized void last() {
+        System.out.println("进入了A类的last方法内部");
+    }
 }
 
 class B {
-	public synchronized void bar(A a) {
-		System.out.println("当前线程名: " + Thread.currentThread().getName()
-				+ " 进入了B实例的bar方法"); // ②
-		try {
-			Thread.sleep(200);
-		} catch (InterruptedException ex) {
-			ex.printStackTrace();
-		}
-		System.out.println("当前线程名: " + Thread.currentThread().getName()
-				+ " 企图调用A实例的last方法"); // ④
-		a.last();
-	}
+    public synchronized void bar(A a) {
+        System.out.println("当前线程名: " + Thread.currentThread().getName()
+                + " 进入了B实例的bar方法"); // ②
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("当前线程名: " + Thread.currentThread().getName()
+                + " 企图调用A实例的last方法"); // ④
+        a.last();
+    }
 
-	public synchronized void last() {
-		System.out.println("进入了B类的last方法内部");
-	}
+    public synchronized void last() {
+        System.out.println("进入了B类的last方法内部");
+    }
 }
 
 public class DeadLock implements Runnable {
-	A a = new A();
-	B b = new B();
+    A a = new A();
+    B b = new B();
 
-	public void init() {
-		Thread.currentThread().setName("主线程");
-		// 调用a对象的foo方法
-		a.foo(b);
-		System.out.println("进入了主线程之后");
-	}
+    public void init() {
+        Thread.currentThread().setName("主线程");
+        // 调用a对象的foo方法
+        a.foo(b);
+        System.out.println("进入了主线程之后");
+    }
 
-	public void run() {
-		Thread.currentThread().setName("副线程");
-		// 调用b对象的bar方法
-		b.bar(a);
-		System.out.println("进入了副线程之后");
-	}
+    public void run() {
+        Thread.currentThread().setName("副线程");
+        // 调用b对象的bar方法
+        b.bar(a);
+        System.out.println("进入了副线程之后");
+    }
 
-	public static void main(String[] args) {
-		DeadLock dl = new DeadLock();
-		new Thread(dl).start();
-		dl.init();
-	}
+    public static void main(String[] args) {
+        DeadLock dl = new DeadLock();
+        new Thread(dl).start();
+        dl.init();
+    }
 }
-
 ```
-
-
 
 ##### 2.7.1死锁
 
@@ -842,16 +825,16 @@ public class DeadLock implements Runnable {
 
 ```java
 class A{
-	private final ReentrantLock lock = new ReenTrantLock();
-	public void m(){
-		lock.lock();
-		try{
-			//保证线程安全的代码;
-		}
-		finally{
-			lock.unlock();
-		}
-	}
+    private final ReentrantLock lock = new ReenTrantLock();
+    public void m(){
+        lock.lock();
+        try{
+            //保证线程安全的代码;
+        }
+        finally{
+            lock.unlock();
+        }
+    }
 }
 ```
 
@@ -935,7 +918,6 @@ public class LockTest {
 
     }
 }
-
 ```
 
 ### 4.线程的通信
@@ -1041,7 +1023,6 @@ public class CommunicationTest {
         t2.start();
     }
 }
-
 ```
 
 # 二、常用类
@@ -1334,7 +1315,6 @@ public class StringMethodTest {
     }
 
 }
-
 ```
 
 #### 1.5String与其他类型的转换
@@ -1458,7 +1438,7 @@ import java.util.Arrays;
  * 3.获取一个字符串在另一个字符串中出现的次数。
       比如：获取“ab”在 “cdabkkcadkabkebfkabkskab”    
       中出现的次数
-      
+
 4.获取两个字符串中最大相同子串。比如：
    str1 = "abcwerthelloyuiodef“;str2 = "cvhellobnm"//10
    提示：将短的那个串进行长度依次递减的子串与较长  
@@ -1473,224 +1453,223 @@ import java.util.Arrays;
  */
 public class StringExer {
 
-	// 第1题
-	public String myTrim(String str) {
-		if (str != null) {
-			int start = 0;// 用于记录从前往后首次索引位置不是空格的位置的索引
-			int end = str.length() - 1;// 用于记录从后往前首次索引位置不是空格的位置的索引
+    // 第1题
+    public String myTrim(String str) {
+        if (str != null) {
+            int start = 0;// 用于记录从前往后首次索引位置不是空格的位置的索引
+            int end = str.length() - 1;// 用于记录从后往前首次索引位置不是空格的位置的索引
 
-			while (start < end && str.charAt(start) == ' ') {
-				start++;
-			}
+            while (start < end && str.charAt(start) == ' ') {
+                start++;
+            }
 
-			while (start < end && str.charAt(end) == ' ') {
-				end--;
-			}
-			if (str.charAt(start) == ' ') {
-				return "";
-			}
+            while (start < end && str.charAt(end) == ' ') {
+                end--;
+            }
+            if (str.charAt(start) == ' ') {
+                return "";
+            }
 
-			return str.substring(start, end + 1);
-		}
-		return null;
-	}
+            return str.substring(start, end + 1);
+        }
+        return null;
+    }
 
-	// 第2题
-	// 方式一：
-	public String reverse1(String str, int start, int end) {// start:2,end:5
-		if (str != null) {
-			// 1.
-			char[] charArray = str.toCharArray();
-			// 2.
-			for (int i = start, j = end; i < j; i++, j--) {
-				char temp = charArray[i];
-				charArray[i] = charArray[j];
-				charArray[j] = temp;
-			}
-			// 3.
-			return new String(charArray);
+    // 第2题
+    // 方式一：
+    public String reverse1(String str, int start, int end) {// start:2,end:5
+        if (str != null) {
+            // 1.
+            char[] charArray = str.toCharArray();
+            // 2.
+            for (int i = start, j = end; i < j; i++, j--) {
+                char temp = charArray[i];
+                charArray[i] = charArray[j];
+                charArray[j] = temp;
+            }
+            // 3.
+            return new String(charArray);
 
-		}
-		return null;
+        }
+        return null;
 
-	}
+    }
 
-	// 方式二：
-	public String reverse2(String str, int start, int end) {
-		// 1.
-		String newStr = str.substring(0, start);// ab
-		// 2.
-		for (int i = end; i >= start; i--) {
-			newStr += str.charAt(i);
-		} // abfedc
-			// 3.
-		newStr += str.substring(end + 1);
-		return newStr;
-	}
+    // 方式二：
+    public String reverse2(String str, int start, int end) {
+        // 1.
+        String newStr = str.substring(0, start);// ab
+        // 2.
+        for (int i = end; i >= start; i--) {
+            newStr += str.charAt(i);
+        } // abfedc
+            // 3.
+        newStr += str.substring(end + 1);
+        return newStr;
+    }
 
-	// 方式三：推荐 （相较于方式二做的改进）
-	public String reverse3(String str, int start, int end) {// ArrayList list = new ArrayList(80);
-		// 1.
-		StringBuffer s = new StringBuffer(str.length());
-		// 2.
-		s.append(str.substring(0, start));// ab
-		// 3.
-		for (int i = end; i >= start; i--) {
-			s.append(str.charAt(i));
-		}
+    // 方式三：推荐 （相较于方式二做的改进）
+    public String reverse3(String str, int start, int end) {// ArrayList list = new ArrayList(80);
+        // 1.
+        StringBuffer s = new StringBuffer(str.length());
+        // 2.
+        s.append(str.substring(0, start));// ab
+        // 3.
+        for (int i = end; i >= start; i--) {
+            s.append(str.charAt(i));
+        }
 
-		// 4.
-		s.append(str.substring(end + 1));
+        // 4.
+        s.append(str.substring(end + 1));
 
-		// 5.
-		return s.toString();
+        // 5.
+        return s.toString();
 
-	}
+    }
 
-	@Test
-	public void testReverse() {
-		String str = "abcdefg";
-		String str1 = reverse3(str, 2, 5);
-		System.out.println(str1);// abfedcg
+    @Test
+    public void testReverse() {
+        String str = "abcdefg";
+        String str1 = reverse3(str, 2, 5);
+        System.out.println(str1);// abfedcg
 
-	}
+    }
 
-	// 第3题
-	// 判断str2在str1中出现的次数
-	public int getCount(String mainStr, String subStr) {
-		if (mainStr.length() >= subStr.length()) {
-			int count = 0;
-			int index = 0;
-			// while((index = mainStr.indexOf(subStr)) != -1){
-			// count++;
-			// mainStr = mainStr.substring(index + subStr.length());
-			// }
-			// 改进：
-			while ((index = mainStr.indexOf(subStr, index)) != -1) {
-				index += subStr.length();
-				count++;
-			}
+    // 第3题
+    // 判断str2在str1中出现的次数
+    public int getCount(String mainStr, String subStr) {
+        if (mainStr.length() >= subStr.length()) {
+            int count = 0;
+            int index = 0;
+            // while((index = mainStr.indexOf(subStr)) != -1){
+            // count++;
+            // mainStr = mainStr.substring(index + subStr.length());
+            // }
+            // 改进：
+            while ((index = mainStr.indexOf(subStr, index)) != -1) {
+                index += subStr.length();
+                count++;
+            }
 
-			return count;
-		} else {
-			return 0;
-		}
+            return count;
+        } else {
+            return 0;
+        }
 
-	}
+    }
 
-	@Test
-	public void testGetCount() {
-		String str1 = "cdabkkcadkabkebfkabkskab";
-		String str2 = "ab";
-		int count = getCount(str1, str2);
-		System.out.println(count);
-	}
+    @Test
+    public void testGetCount() {
+        String str1 = "cdabkkcadkabkebfkabkskab";
+        String str2 = "ab";
+        int count = getCount(str1, str2);
+        System.out.println(count);
+    }
 
-	@Test
-	public void testMyTrim() {
-		String str = "   a   ";
-		// str = " ";
-		String newStr = myTrim(str);
-		System.out.println("---" + newStr + "---");
-	}
+    @Test
+    public void testMyTrim() {
+        String str = "   a   ";
+        // str = " ";
+        String newStr = myTrim(str);
+        System.out.println("---" + newStr + "---");
+    }
 
-	// 第4题
-	// 如果只存在一个最大长度的相同子串
-	public String getMaxSameSubString(String str1, String str2) {
-		if (str1 != null && str2 != null) {
-			String maxStr = (str1.length() > str2.length()) ? str1 : str2;
-			String minStr = (str1.length() > str2.length()) ? str2 : str1;
+    // 第4题
+    // 如果只存在一个最大长度的相同子串
+    public String getMaxSameSubString(String str1, String str2) {
+        if (str1 != null && str2 != null) {
+            String maxStr = (str1.length() > str2.length()) ? str1 : str2;
+            String minStr = (str1.length() > str2.length()) ? str2 : str1;
 
-			int len = minStr.length();
+            int len = minStr.length();
 
-			for (int i = 0; i < len; i++) {// 0 1 2 3 4 此层循环决定要去几个字符
+            for (int i = 0; i < len; i++) {// 0 1 2 3 4 此层循环决定要去几个字符
 
-				for (int x = 0, y = len - i; y <= len; x++, y++) {
+                for (int x = 0, y = len - i; y <= len; x++, y++) {
 
-					if (maxStr.contains(minStr.substring(x, y))) {
+                    if (maxStr.contains(minStr.substring(x, y))) {
 
-						return minStr.substring(x, y);
-					}
+                        return minStr.substring(x, y);
+                    }
 
-				}
+                }
 
-			}
-		}
-		return null;
-	}
+            }
+        }
+        return null;
+    }
 
-	// 如果存在多个长度相同的最大相同子串
-	// 此时先返回String[]，后面可以用集合中的ArrayList替换，较方便
-	public String[] getMaxSameSubString1(String str1, String str2) {
-		if (str1 != null && str2 != null) {
-			StringBuffer sBuffer = new StringBuffer();
-			String maxString = (str1.length() > str2.length()) ? str1 : str2;
-			String minString = (str1.length() > str2.length()) ? str2 : str1;
+    // 如果存在多个长度相同的最大相同子串
+    // 此时先返回String[]，后面可以用集合中的ArrayList替换，较方便
+    public String[] getMaxSameSubString1(String str1, String str2) {
+        if (str1 != null && str2 != null) {
+            StringBuffer sBuffer = new StringBuffer();
+            String maxString = (str1.length() > str2.length()) ? str1 : str2;
+            String minString = (str1.length() > str2.length()) ? str2 : str1;
 
-			int len = minString.length();
-			for (int i = 0; i < len; i++) {
-				for (int x = 0, y = len - i; y <= len; x++, y++) {
-					String subString = minString.substring(x, y);
-					if (maxString.contains(subString)) {
-						sBuffer.append(subString + ",");
-					}
-				}
-				System.out.println(sBuffer);
-				if (sBuffer.length() != 0) {
-					break;
-				}
-			}
-			String[] split = sBuffer.toString().replaceAll(",$", "").split("\\,");
-			return split;
-		}
+            int len = minString.length();
+            for (int i = 0; i < len; i++) {
+                for (int x = 0, y = len - i; y <= len; x++, y++) {
+                    String subString = minString.substring(x, y);
+                    if (maxString.contains(subString)) {
+                        sBuffer.append(subString + ",");
+                    }
+                }
+                System.out.println(sBuffer);
+                if (sBuffer.length() != 0) {
+                    break;
+                }
+            }
+            String[] split = sBuffer.toString().replaceAll(",$", "").split("\\,");
+            return split;
+        }
 
-		return null;
-	}
-	// 如果存在多个长度相同的最大相同子串：使用ArrayList
-//	public List<String> getMaxSameSubString1(String str1, String str2) {
-//		if (str1 != null && str2 != null) {
-//			List<String> list = new ArrayList<String>();
-//			String maxString = (str1.length() > str2.length()) ? str1 : str2;
-//			String minString = (str1.length() > str2.length()) ? str2 : str1;
+        return null;
+    }
+    // 如果存在多个长度相同的最大相同子串：使用ArrayList
+//    public List<String> getMaxSameSubString1(String str1, String str2) {
+//        if (str1 != null && str2 != null) {
+//            List<String> list = new ArrayList<String>();
+//            String maxString = (str1.length() > str2.length()) ? str1 : str2;
+//            String minString = (str1.length() > str2.length()) ? str2 : str1;
 //
-//			int len = minString.length();
-//			for (int i = 0; i < len; i++) {
-//				for (int x = 0, y = len - i; y <= len; x++, y++) {
-//					String subString = minString.substring(x, y);
-//					if (maxString.contains(subString)) {
-//						list.add(subString);
-//					}
-//				}
-//				if (list.size() != 0) {
-//					break;
-//				}
-//			}
-//			return list;
-//		}
+//            int len = minString.length();
+//            for (int i = 0; i < len; i++) {
+//                for (int x = 0, y = len - i; y <= len; x++, y++) {
+//                    String subString = minString.substring(x, y);
+//                    if (maxString.contains(subString)) {
+//                        list.add(subString);
+//                    }
+//                }
+//                if (list.size() != 0) {
+//                    break;
+//                }
+//            }
+//            return list;
+//        }
 //
-//		return null;
-//	}
+//        return null;
+//    }
 
-	@Test
-	public void testGetMaxSameSubString() {
-		String str1 = "abcwerthelloyuiodef";
-		String str2 = "cvhellobnmiodef";
-		String[] strs = getMaxSameSubString1(str1, str2);
-		System.out.println(Arrays.toString(strs));
-	}
+    @Test
+    public void testGetMaxSameSubString() {
+        String str1 = "abcwerthelloyuiodef";
+        String str2 = "cvhellobnmiodef";
+        String[] strs = getMaxSameSubString1(str1, str2);
+        System.out.println(Arrays.toString(strs));
+    }
 
-	// 第5题
-	@Test
-	public void testSort() {
-		String str = "abcwerthelloyuiodef";
-		char[] arr = str.toCharArray();
-		Arrays.sort(arr);
+    // 第5题
+    @Test
+    public void testSort() {
+        String str = "abcwerthelloyuiodef";
+        char[] arr = str.toCharArray();
+        Arrays.sort(arr);
 
-		String newStr = new String(arr);
-		System.out.println(newStr);
-	}
+        String newStr = new String(arr);
+        System.out.println(newStr);
+    }
 }
-
 ```
 
 ### 2.StringBuffer和StringBuilder类
@@ -1821,16 +1800,13 @@ public void setCharAt(int n ,char ch)
         System.out.println(sb2.length());
     }
 }
-
 ```
-
-
 
 #### 2.1StringBuffer类
 
--  java.lang.StringBuffer代表可变的字符序列，JDK1.0中声明，可以对字符 串内容进行增删，此时不会产生新的对象。
--  很多方法与String相同。
--  作为参数传递时，方法内部可以改变值。
+- java.lang.StringBuffer代表可变的字符序列，JDK1.0中声明，可以对字符 串内容进行增删，此时不会产生新的对象。
+- 很多方法与String相同。
+- 作为参数传递时，方法内部可以改变值。
 
 ##### 2.1.1StringBuffer的使用
 
@@ -1838,7 +1814,7 @@ StringBuffer类不同于String，其对象必须使用构造器生成。有三�
 
 - StringBuffer()：初始容量为16的字符串缓冲区 
 - StringBuffer(int size)：构造指定容量的字符串缓冲区
--  StringBuffer(String str)：将内容初始化为指定字符串内容
+- StringBuffer(String str)：将内容初始化为指定字符串内容
 
 ![image-20211019093343398](JAVA高级.assets/image-20211019093343398.png)
 
@@ -1850,7 +1826,7 @@ StringBuffer类不同于String，其对象必须使用构造器生成。有三�
 - StringBuffer insert(int offset, xxx)：在指定位置插入xxx 
 - StringBuffer reverse() ：把当前字符序列逆转
 - public int indexOf(String str)
--  public String substring(int start,int end) 
+- public String substring(int start,int end) 
 - public int length() 
 - public char charAt(int n ) 
 - public void setCharAt(int n ,char ch)
@@ -1888,12 +1864,15 @@ System类提供的public static long currentTimeMillis()用来返回当前时 �
 构造器：
 
 - Date()：使用无参构造器创建的对象可以获取本地当前时间。 
-- Date(long date)
 
- 常用方法：
+- Date(long date)
+  
+  常用方法：
 
 - getTime():返回自 1970 年 1 月 1 日 00:00:00 GMT 以来此 Date 对象 表示的毫秒数。 
+
 - toString():把此 Date 对象转换为以下形式的 String： dow mon dd hh:mm:ss zzz yyyy 其中： dow 是一周中的某一天 (Sun, Mon, Tue, Wed, Thu, Fri, Sat)，zzz是时间标准。 
+
 - 其它很多方法都过时了。
 
 ```java
@@ -1968,10 +1947,7 @@ public class DateTimeTest {
         System.out.println(time);
     }
 }
-
 ```
-
-
 
 #### 1.3 java.text.SimpleDateFormat类
 
@@ -1990,8 +1966,6 @@ Date类的API不易于国际化，大部分被废弃了，java.text.SimpleDateFo
 - public Date parse(String source)：从给定字符串的开始解析文本，以生成 一个日期。
 
 ![image-20211019094843639](JAVA高级.assets/image-20211019094843639.png)
-
-
 
 #### 1.4 java.util.Calendar(日历)类
 
@@ -2138,7 +2112,6 @@ public class DateTimeTest {
         System.out.println(days1);
     }
 }
-
 ```
 
 ### 2.JDK8中新日期时间API
@@ -2167,8 +2140,6 @@ public class JDK8DateTimeTest {
         System.out.println(date1);//Fri Oct 08 00:00:00 CST 3920
     }
 ```
-
-
 
 #### 2.2新时间日期API
 
@@ -2325,19 +2296,19 @@ java.time.format.DateTimeFormatter 类：该类提供了三种格式化方法：
 
 #### 2.6其它API
 
-1.  ZoneId：该类中包含了所有的时区信息，一个时区的ID，如 Europe/Paris 
+1. ZoneId：该类中包含了所有的时区信息，一个时区的ID，如 Europe/Paris 
 
-2.  ZonedDateTime：一个在ISO-8601日历系统时区的日期时间，如 2007-12- 03T10:15:30+01:00 Europe/Paris。 
-
+2. ZonedDateTime：一个在ISO-8601日历系统时区的日期时间，如 2007-12- 03T10:15:30+01:00 Europe/Paris。 
+   
    其中每个时区都对应着ID，地区ID都为“{区域}/{城市}”的格式，例如： Asia/Shanghai等 
 
 3. Clock：使用时区提供对当前即时、日期和时间的访问的时钟。 
-
+   
    持续时间：Duration，用于计算两个“时间”间隔 
-
+   
    日期间隔：Period，用于计算两个“日期”间隔
 
-4.  TemporalAdjuster : 时间校正器。有时我们可能需要获取例如：将日期调整 到“下一个工作日”等操作。 
+4. TemporalAdjuster : 时间校正器。有时我们可能需要获取例如：将日期调整 到“下一个工作日”等操作。 
 
 5. TemporalAdjusters : 该类通过静态方法 (firstDayOfXxx()/lastDayOfXxx()/nextXxx())提供了大量的常用 TemporalAdjuster 的实现。
 
@@ -2363,8 +2334,6 @@ java.time.format.DateTimeFormatter 类：该类提供了三种格式化方法：
  */
 ```
 
-
-
 ### 1.自然排序：java.lang.Comparable
 
 - Comparable接口强行对实现它的每个类的对象进行整体排序。这种排序被称 为类的自然排序。 
@@ -2376,15 +2345,15 @@ java.time.format.DateTimeFormatter 类：该类提供了三种格式化方法：
 - 对于类 C 的每一个 e1 和 e2 来说，当且仅当 e1.compareTo(e2) == 0 与 e1.equals(e2) 具有相同的 boolean 值时，类 C 的自然排序才叫做与 equals 一致。建议（虽然不是必需的）最好使自然排序与 equals 一致。
 
 - Comparable 的典型实现：(默认都是从小到大排列的)
-
+  
   String：按照字符串中字符的Unicode值进行比较 
-
+  
   Character：按照字符的Unicode值来进行比较 
-
+  
   数值类型对应的包装类以及BigInteger、BigDecimal：按照它们对应的数值 大小进行比较 
-
+  
   Boolean：true 对应的包装类实例大于 false 对应的包装类实例 
-
+  
   Date、Time等：后面的日期时间比前面的日期时间大
 
 ```java
@@ -2421,14 +2390,14 @@ java.time.format.DateTimeFormatter 类：该类提供了三种格式化方法：
     }
 ```
 
-
-
 ### 2.定制排序：java.util.Comparator
 
 - 当元素的类型没有实现java.lang.Comparable接口而又不方便修改代码， 或者实现了java.lang.Comparable接口的排序规则不适合当前的操作，那 么可以考虑使用 Comparator 的对象来排序，强行对多个对象进行整体排 序的比较。
 
 - 重写compare(Object o1,Object o2)方法，比较o1和o2的大小：如果方法返 回正整数，则表示o1大于o2；如果返回0，表示相等；返回负整数，表示 o1小于o2。 
+
 - 可以将 Comparator 传递给 sort 方法（如 Collections.sort 或 Arrays.sort）， 从而允许在排序顺序上实现精确控制。 
+
 - 还可以使用 Comparator 来控制某些数据结构（如有序 set或有序映射）的 顺序，或者为那些没有自然顺序的对象 collection 提供排序。
 
 ```java
@@ -2493,7 +2462,6 @@ java.time.format.DateTimeFormatter 类：该类提供了三种格式化方法：
 
         System.out.println(Arrays.toString(arr));
     }
-
 ```
 
 ## （四）其他常用类
@@ -2526,8 +2494,6 @@ System类代表系统，系统级的很多属性和控制方法都放置在该�
     }
 ```
 
-
-
 #### 1.1成员变量
 
 System类内部包含in、out和err三个成员变量，分别代表标准输入流 (键盘输入)，标准输出流(显示器)和标准错误输出流(显示器)。
@@ -2537,7 +2503,9 @@ System类内部包含in、out和err三个成员变量，分别代表标准输入
 - native long currentTimeMillis()： 该方法的作用是返回当前的计算机时间，时间的表达格式为当前计算机时 间和GMT时间(格林威治时间)1970年1月1号0时0分0秒所差的毫秒数。 
 
 - void exit(int status)： 该方法的作用是退出程序。其中status的值为0代表正常退出，非零代表 异常退出。使用该方法可以在图形界面编程中实现程序的退出功能等。
+
 - void gc()： 该方法的作用是请求系统进行垃圾回收。至于系统是否立刻回收，则 取决于系统中垃圾回收算法的实现以及系统执行时的情况。
+
 - String getProperty(String key)： 该方法的作用是获得系统中属性名为key的属性对应的值。系统中常见 的属性名以及属性的作用如下表所示：
 
 ### 2.Math类
@@ -2572,8 +2540,6 @@ java.lang.Math提供了一系列静态方法用于科学计算。其方法的参
     }
 ```
 
-
-
 #### 3.1BigInteger类
 
 - Integer类作为int的包装类，能存储的最大整型值为2 ^31-1，Long类也是有限的， 最大为2 ^63-1。如果要表示再大的整数，不管是基本数据类型还是他们的包装类 都无能为力，更不用说进行运算了。
@@ -2596,18 +2562,22 @@ java.lang.Math提供了一系列静态方法用于科学计算。其方法的参
 #### 3.2BigDecimal类
 
 1. 一般的Float类和Double类可以用来做科学计算或工程计算，但在商业计算中， 要求数字精度比较高，故用到java.math.BigDecimal类。
+
 2. BigDecimal类支持不可变的、任意精度的有符号十进制定点数。
-
+   
    3.构造器
+- public BigDecimal(double val)
 
--  public BigDecimal(double val)
--  public BigDecimal(String val)
-
-   4.常用方法
+- public BigDecimal(String val)
+  
+  4.常用方法
 
 - public BigDecimal add(BigDecimal augend) 
+
 - public BigDecimal subtract(BigDecimal subtrahend) 
+
 - public BigDecimal multiply(BigDecimal multiplicand) 
+
 - public BigDecimal divide(BigDecimal divisor, int scale, int roundingMode)
 
 # 三、枚举类与注解
@@ -2830,7 +2800,6 @@ enum Season1 implements Info{
 
 
 }
-
 ```
 
 #### 3.2 Enum类的主要方法
@@ -2965,12 +2934,9 @@ class Student extends Person implements Info{
         System.out.println("show");
     }
 }
-
 ```
 
-
-
-### 1.注解(Annotation)概述 
+### 1.注解(Annotation)概述
 
 - 从 JDK 5.0 开始, Java 增加了对元数据(MetaData) 的支持, 也就是 Annotation(注解) 
 - Annotation 其实就是代码里的特殊标记, 这些标记可以在编译, 类加 载, 运行时被读取, 并执行相应的处理。通过使用 Annotation, 程序员 可以在不改变原有逻辑的情况下, 在源文件中嵌入一些补充信息。代 码分析工具、开发工具和部署工具可以通过这些补充信息进行验证 或者进行部署。 
@@ -2978,22 +2944,22 @@ class Student extends Person implements Info{
 - 在JavaEE/Android中注解占据了更重要的角色，例如 用来配置应用程序的任何切面，代替JavaEE旧版中所遗留的繁冗 代码和XML配置等。 
 - 未来的开发模式都是基于注解的，JPA是基于注解的，Spring2.5以 上都是基于注解的，Hibernate3.x以后也是基于注解的，现在的 Struts2有一部分也是基于注解的了，注解是一种趋势，一定程度上 可以说：框架 = 注解 + 反射 + 设计模式
 
-### 2.常见的Annotation示例 
+### 2.常见的Annotation示例
 
 使用 Annotation 时要在其前面增加 @ 符号, 并把该 Annotation 当成 一个修饰符使用。用于修饰它支持的程序元素。
 
 - 示例一：生成文档相关的注解
-
+  
   ![image-20211019184723382](JAVA高级.assets/image-20211019184723382.png)
 
 - 示例二：在编译时进行格式检查(JDK内置的三个基本注解)
-
+  
   @Override: 限定重写父类方法, 该注解只能用于方法 
-
+  
   @Deprecated: 用于表示所修饰的元素(类, 方法等)已过时。通常是因为 所修饰的结构危险或存在更好的选择
-
+  
    @SuppressWarnings: 抑制编译器警告
-
+  
   ![image-20211019184810846](JAVA高级.assets/image-20211019184810846.png)
 
 - 示例三：跟踪代码依赖性，实现替代配置文件功能
@@ -3002,7 +2968,7 @@ Servlet3.0提供了注解(annotation),使得不再需要在web.xml文件中进�
 
 ![image-20211019184837138](JAVA高级.assets/image-20211019184837138.png)
 
-### 3.自定义Annotation 
+### 3.自定义Annotation
 
 - 定义新的 Annotation 类型使用 @interface 关键字 
 - 自定义注解自动继承了java.lang.annotation.Annotation接口 
@@ -3032,24 +2998,21 @@ public @interface MyAnnotation {
 
     String value() default "hello";
 }
-
 ```
 
-
-
-### 4.JDK中的元注解 
+### 4.JDK中的元注解
 
 - JDK 的元 Annotation 用于修饰其他 Annotation 定义
 
 - JDK5.0提供了4个标准的meta-annotation类型，分别是：
-
-  ​	Retention 
-
-  ​	Target 
-
-  ​	Documented 
-
-  ​	Inherited
+  
+  ​    Retention 
+  
+  ​    Target 
+  
+  ​    Documented 
+  
+  ​    Inherited
 
 #### 4.1@Retention
 
@@ -3080,7 +3043,7 @@ public @interface MyAnnotation {
 - 比如：如果把标有@Inherited注解的自定义的注解标注在类级别上，子类则可以 继承父类类级别的注解 
 - 实际应用中，使用较少
 
-### 5.利用反射获取注解信息（在反射部分涉及） 
+### 5.利用反射获取注解信息（在反射部分涉及）
 
 - JDK 5.0 在 java.lang.reflect 包下新增了 AnnotatedElement 接口, 该接口代 表程序中可以接受注解的程序元素 
 - 当一个 Annotation 类型被定义为运行时 Annotation 后, 该注解才是运行时 可见, 当 class 文件被载入时保存在 class 文件中的 Annotation 才会被虚拟 机读取 
@@ -3113,15 +3076,15 @@ public class AnnotationTest<U> {
 @MyAnnotation
 private String name;
 public static void main(String[] args) {
-	AnnotationTest<@MyAnnotation String> t = null;
-	int a = (@MyAnnotation int) 2L;
-	@MyAnnotation
-	int b = 10;
+    AnnotationTest<@MyAnnotation String> t = null;
+    int a = (@MyAnnotation int) 2L;
+    @MyAnnotation
+    int b = 10;
 }
 public static <@MyAnnotation T> void method(T t) {
 }
-public static void test(@MyAnnotation String arg) throws @MyAnnotation 		Exception {
-	}
+public static void test(@MyAnnotation String arg) throws @MyAnnotation         Exception {
+    }
 }
 @Target(ElementType.TYPE_USE)
 @interface MyAnnotation {
@@ -3370,7 +3333,6 @@ public class CollectionTest {
 
 
     }
-
 ```
 
 ### 2.集合元素的遍历
@@ -3504,7 +3466,6 @@ public class IteratorTest {
 
 
 }
-
 ```
 
 #### 2.2foreach 循环遍历
@@ -3581,7 +3542,6 @@ public class ForTest {
         }//"MM"
     }
 }
-
 ```
 
 ### 3.Collection子接口之一： List接口
@@ -3779,10 +3739,10 @@ public class ListTest {
 - 本质上，ArrayList是对象引用的一个”变长”数组 
 
 - ArrayList的JDK1.8之前与之后的实现区别？ 
-
-  ​	 JDK1.7：ArrayList像饿汉式，直接创建一个初始容量为10的数组 
-
-  ​	 JDK1.8：ArrayList像懒汉式，一开始创建一个长度为0的数组，当添加第一个元 素时再创建一个始容量为10的数组
+  
+  ​     JDK1.7：ArrayList像饿汉式，直接创建一个初始容量为10的数组 
+  
+  ​     JDK1.8：ArrayList像懒汉式，一开始创建一个长度为0的数组，当添加第一个元 素时再创建一个始容量为10的数组
 
 - Arrays.asList(…) 方法返回的 List 集合，既不是 ArrayList 实例，也不是 Vector 实例。 Arrays.asList(…) 返回值是一个固定长度的 List 集合
 
@@ -3908,8 +3868,6 @@ HashSet 集合判断两个元素相等的标准：两个对象通过 hashCode() 
         }
     }
 ```
-
-
 
 ##### 4.2.2重写 hashCode() 方法的基本原则
 
@@ -4080,7 +4038,6 @@ public class TreeSetTest {
 
     }
 }
-
 ```
 
 ```java
@@ -4170,7 +4127,6 @@ public class User implements Comparable{
         }
     }
 }
-
 ```
 
 ## （三）Map
@@ -4211,7 +4167,6 @@ for (Object mapping : mappings) {
 Map.Entry entry = (Map.Entry) mapping;
 System.out.println("key是：" + entry.getKey() + "，value是：" + entry.getValue());
 }
-
 ```
 
 ### 3.Map实现类之一：HashMap
@@ -4429,7 +4384,6 @@ public class MapTest {
 
     }
 }
-
 ```
 
 ### 4.Map实现类之二：LinkedHashMap
@@ -4447,10 +4401,10 @@ public class MapTest {
 - TreeSet底层使用红黑树结构存储数据 
 
 - TreeMap 的 Key 的排序： 
-
-  ​		自然排序：TreeMap 的所有的 Key 必须实现 Comparable 接口，而且所有 的 Key 应该是同一个类的对象，否则将会抛出 ClasssCastException 
-
-  ​		定制排序：创建 TreeMap 时，传入一个 Comparator 对象，该对象负责对 TreeMap 中的所有 key 进行排序。此时不需要 Map 的 Key 实现 Comparable 接口 
+  
+  ​        自然排序：TreeMap 的所有的 Key 必须实现 Comparable 接口，而且所有 的 Key 应该是同一个类的对象，否则将会抛出 ClasssCastException 
+  
+  ​        定制排序：创建 TreeMap 时，传入一个 Comparator 对象，该对象负责对 TreeMap 中的所有 key 进行排序。此时不需要 Map 的 Key 实现 Comparable 接口 
 
 - TreeMap判断两个key相等的标准：两个key通过compareTo()方法或 者compare()方法返回0。
 
@@ -4528,7 +4482,6 @@ public class TreeMapTest {
     }
 
 }
-
 ```
 
 ```java
@@ -4618,7 +4571,6 @@ public class User implements Comparable{
         }
     }
 }
-
 ```
 
 ### 6.Map实现类之四：Hashtable
@@ -4757,7 +4709,6 @@ public class CollectionsTest {
 
     }
 }
-
 ```
 
 # 五、泛型
@@ -4887,7 +4838,6 @@ public class GenericTest {
     }
 
 }
-
 ```
 
 ## （三）自定义泛型结构
@@ -4907,7 +4857,7 @@ public class GenericTest {
 7. jdk1.7，泛型的简化操作：ArrayList<Fruit> flist = new ArrayList<>(); 
 8. 泛型的指定中不能使用基本数据类型，可以使用包装类替换。
 9. 在类/接口上声明的泛型，在本类或本接口中即代表某种类型，可以作为非静态 属性的类型、非静态方法的参数类型、非静态方法的返回值类型。但在静态方法 中不能使用类的泛型。
-10.  异常类不能是泛型的
+10. 异常类不能是泛型的
 11. 不能使用new E[]。但是可以：E[] elements = (E[])new Object[capacity]; 参考：ArrayList源码中声明：Object[] elementData，而非泛型参数类型数组。
 
 ![image-20211023201148829](JAVA高级.assets/image-20211023201148829.png)
@@ -4979,10 +4929,7 @@ public class GenericTest1 {
     }
 
 }
-
 ```
-
-
 
 ### 2.自定义泛型方法
 
@@ -5059,7 +5006,6 @@ public class Order<T> {//T\E\K\V
         return list;
     }
 }
-
 ```
 
 ## （四）泛型在继承上的体现
@@ -5111,7 +5057,7 @@ public class Order<T> {//T\E\K\V
     public void show1(List<String> list){
 
     }
-	@Test
+    @Test
     public void test2(){
         List<String> list1 = null;
         ArrayList<String> list2 = null;
@@ -5171,7 +5117,6 @@ public class Order<T> {//T\E\K\V
             System.out.println(next);
         }
     }
-
 ```
 
 ![image-20211023201913485](JAVA高级.assets/image-20211023201913485.png)
@@ -5237,8 +5182,6 @@ public class Order<T> {//T\E\K\V
  * @creat 2021-10-23-20:36
  */
 ```
-
-
 
 ### 2.常用构造器
 
@@ -5342,8 +5285,6 @@ public class Order<T> {//T\E\K\V
     }
 ```
 
-
-
 #### 4.2File类的重命名功能
 
 ![image-20211025124906463](JAVA高级.assets/image-20211025124906463.png)
@@ -5364,8 +5305,6 @@ public class Order<T> {//T\E\K\V
         System.out.println(renameTo);
     }
 ```
-
-
 
 #### 4.3File类的判断功能
 
@@ -5397,8 +5336,6 @@ public class Order<T> {//T\E\K\V
 
     }
 ```
-
-
 
 #### 4.4File类的创建功能
 
@@ -5494,8 +5431,6 @@ public class Order<T> {//T\E\K\V
  * @creat 2021-10-25-16:03
  */
 ```
-
-
 
 ### 3.IO 流体系
 
@@ -5829,10 +5764,7 @@ public class FileInputOutputStreamTest {
 
 
 }
-
 ```
-
-
 
 ### 3.注意
 
@@ -6039,7 +5971,6 @@ public class BufferedTest {
     }
 
 }
-
 ```
 
 ## （四）转换流
@@ -6047,10 +5978,10 @@ public class BufferedTest {
 - 转换流提供了在字节流和字符流之间的转换
 
 - Java API提供了两个转换流：
-
-  ​	 InputStreamReader：将InputStream转换为Reader 
-
-  ​	 OutputStreamWriter：将Writer转换为OutputStream
+  
+  ​     InputStreamReader：将InputStream转换为Reader 
+  
+  ​     OutputStreamWriter：将Writer转换为OutputStream
 
 - 字节流中的数据都是字符时，转成字符流操作更高效。
 
@@ -6154,7 +6085,6 @@ public class InputStreamReaderTest {
 
 
 }
-
 ```
 
 ![image-20211027163123734](JAVA高级.assets/image-20211027163123734.png)
@@ -6429,7 +6359,6 @@ public class ObjectInputOutputStreamTest {
 
 
 }
-
 ```
 
 ## （七）随机存取文件流-RandomAccessFile 类
@@ -6572,7 +6501,6 @@ public class RandomAccessFileTest {
         //思考：将StringBuilder替换为ByteArrayOutputStream
     }
 }
-
 ```
 
 ## （八）NIO.2中Path、 Paths、Files类的使用
@@ -6636,41 +6564,41 @@ public class PathTest {
         Path path1 = Paths.get("d:\\", "nio\\nio1\\nio2\\hello.txt");
         Path path2 = Paths.get("hello.txt");
 
-//		String toString() ： 返回调用 Path 对象的字符串表示形式
+//        String toString() ： 返回调用 Path 对象的字符串表示形式
         System.out.println(path1);
 
-//		boolean startsWith(String path) : 判断是否以 path 路径开始
+//        boolean startsWith(String path) : 判断是否以 path 路径开始
         System.out.println(path1.startsWith("d:\\nio"));
-//		boolean endsWith(String path) : 判断是否以 path 路径结束
+//        boolean endsWith(String path) : 判断是否以 path 路径结束
         System.out.println(path1.endsWith("hello.txt"));
-//		boolean isAbsolute() : 判断是否是绝对路径
+//        boolean isAbsolute() : 判断是否是绝对路径
         System.out.println(path1.isAbsolute() + "~");
         System.out.println(path2.isAbsolute() + "~");
-//		Path getParent() ：返回Path对象包含整个路径，不包含 Path 对象指定的文件路径
+//        Path getParent() ：返回Path对象包含整个路径，不包含 Path 对象指定的文件路径
         System.out.println(path1.getParent());
         System.out.println(path2.getParent());
-//		Path getRoot() ：返回调用 Path 对象的根路径
+//        Path getRoot() ：返回调用 Path 对象的根路径
         System.out.println(path1.getRoot());
         System.out.println(path2.getRoot());
-//		Path getFileName() : 返回与调用 Path 对象关联的文件名
+//        Path getFileName() : 返回与调用 Path 对象关联的文件名
         System.out.println(path1.getFileName() + "~");
         System.out.println(path2.getFileName() + "~");
-//		int getNameCount() : 返回Path 根目录后面元素的数量
-//		Path getName(int idx) : 返回指定索引位置 idx 的路径名称
+//        int getNameCount() : 返回Path 根目录后面元素的数量
+//        Path getName(int idx) : 返回指定索引位置 idx 的路径名称
         for (int i = 0; i < path1.getNameCount(); i++) {
             System.out.println(path1.getName(i) + "*****");
         }
 
-//		Path toAbsolutePath() : 作为绝对路径返回调用 Path 对象
+//        Path toAbsolutePath() : 作为绝对路径返回调用 Path 对象
         System.out.println(path1.toAbsolutePath());
         System.out.println(path2.toAbsolutePath());
-//		Path resolve(Path p) :合并两个路径，返回合并后的路径对应的Path对象
+//        Path resolve(Path p) :合并两个路径，返回合并后的路径对应的Path对象
         Path path3 = Paths.get("d:\\", "nio");
         Path path4 = Paths.get("nioo\\hi.txt");
         path3 = path3.resolve(path4);
         System.out.println(path3);
 
-//		File toFile(): 将Path转化为File类的对象
+//        File toFile(): 将Path转化为File类的对象
         File file = path1.toFile();//Path--->File的转换
 
         Path newPath = file.toPath();//File--->Path的转换
@@ -6679,10 +6607,7 @@ public class PathTest {
 
 
 }
-
 ```
-
-
 
 #### 2.2Files 类
 
@@ -6709,101 +6634,100 @@ import java.util.Iterator;
  */
 public class FilesTest {
 
-	@Test
-	public void test1() throws IOException{
-		Path path1 = Paths.get("d:\\nio", "hello.txt");
-		Path path2 = Paths.get("atguigu.txt");
-		
-//		Path copy(Path src, Path dest, CopyOption … how) : 文件的复制
-		//要想复制成功，要求path1对应的物理上的文件存在。path1对应的文件没有要求。
-//		Files.copy(path1, path2, StandardCopyOption.REPLACE_EXISTING);
-		
-//		Path createDirectory(Path path, FileAttribute<?> … attr) : 创建一个目录
-		//要想执行成功，要求path对应的物理上的文件目录不存在。一旦存在，抛出异常。
-		Path path3 = Paths.get("d:\\nio\\nio1");
-//		Files.createDirectory(path3);
-		
-//		Path createFile(Path path, FileAttribute<?> … arr) : 创建一个文件
-		//要想执行成功，要求path对应的物理上的文件不存在。一旦存在，抛出异常。
-		Path path4 = Paths.get("d:\\nio\\hi.txt");
-//		Files.createFile(path4);
-		
-//		void delete(Path path) : 删除一个文件/目录，如果不存在，执行报错
-//		Files.delete(path4);
-		
-//		void deleteIfExists(Path path) : Path对应的文件/目录如果存在，执行删除.如果不存在，正常执行结束
-		Files.deleteIfExists(path3);
-		
-//		Path move(Path src, Path dest, CopyOption…how) : 将 src 移动到 dest 位置
-		//要想执行成功，src对应的物理上的文件需要存在，dest对应的文件没有要求。
-//		Files.move(path1, path2, StandardCopyOption.ATOMIC_MOVE);
-		
-//		long size(Path path) : 返回 path 指定文件的大小
-		long size = Files.size(path2);
-		System.out.println(size);
+    @Test
+    public void test1() throws IOException{
+        Path path1 = Paths.get("d:\\nio", "hello.txt");
+        Path path2 = Paths.get("atguigu.txt");
 
-	}
+//        Path copy(Path src, Path dest, CopyOption … how) : 文件的复制
+        //要想复制成功，要求path1对应的物理上的文件存在。path1对应的文件没有要求。
+//        Files.copy(path1, path2, StandardCopyOption.REPLACE_EXISTING);
 
-	@Test
-	public void test2() throws IOException{
-		Path path1 = Paths.get("d:\\nio", "hello.txt");
-		Path path2 = Paths.get("atguigu.txt");
-//		boolean exists(Path path, LinkOption … opts) : 判断文件是否存在
-		System.out.println(Files.exists(path2, LinkOption.NOFOLLOW_LINKS));
+//        Path createDirectory(Path path, FileAttribute<?> … attr) : 创建一个目录
+        //要想执行成功，要求path对应的物理上的文件目录不存在。一旦存在，抛出异常。
+        Path path3 = Paths.get("d:\\nio\\nio1");
+//        Files.createDirectory(path3);
 
-//		boolean isDirectory(Path path, LinkOption … opts) : 判断是否是目录
-		//不要求此path对应的物理文件存在。
-		System.out.println(Files.isDirectory(path1, LinkOption.NOFOLLOW_LINKS));
+//        Path createFile(Path path, FileAttribute<?> … arr) : 创建一个文件
+        //要想执行成功，要求path对应的物理上的文件不存在。一旦存在，抛出异常。
+        Path path4 = Paths.get("d:\\nio\\hi.txt");
+//        Files.createFile(path4);
 
-//		boolean isRegularFile(Path path, LinkOption … opts) : 判断是否是文件
+//        void delete(Path path) : 删除一个文件/目录，如果不存在，执行报错
+//        Files.delete(path4);
 
-//		boolean isHidden(Path path) : 判断是否是隐藏文件
-		//要求此path对应的物理上的文件需要存在。才可判断是否隐藏。否则，抛异常。
-//		System.out.println(Files.isHidden(path1));
+//        void deleteIfExists(Path path) : Path对应的文件/目录如果存在，执行删除.如果不存在，正常执行结束
+        Files.deleteIfExists(path3);
 
-//		boolean isReadable(Path path) : 判断文件是否可读
-		System.out.println(Files.isReadable(path1));
-//		boolean isWritable(Path path) : 判断文件是否可写
-		System.out.println(Files.isWritable(path1));
-//		boolean notExists(Path path, LinkOption … opts) : 判断文件是否不存在
-		System.out.println(Files.notExists(path1, LinkOption.NOFOLLOW_LINKS));
-	}
+//        Path move(Path src, Path dest, CopyOption…how) : 将 src 移动到 dest 位置
+        //要想执行成功，src对应的物理上的文件需要存在，dest对应的文件没有要求。
+//        Files.move(path1, path2, StandardCopyOption.ATOMIC_MOVE);
 
-	/**
-	 * StandardOpenOption.READ:表示对应的Channel是可读的。
-	 * StandardOpenOption.WRITE：表示对应的Channel是可写的。
-	 * StandardOpenOption.CREATE：如果要写出的文件不存在，则创建。如果存在，忽略
-	 * StandardOpenOption.CREATE_NEW：如果要写出的文件不存在，则创建。如果存在，抛异常
-	 *
-	 * @author shkstart 邮箱：shkstart@126.com
-	 * @throws IOException
-	 */
-	@Test
-	public void test3() throws IOException{
-		Path path1 = Paths.get("d:\\nio", "hello.txt");
+//        long size(Path path) : 返回 path 指定文件的大小
+        long size = Files.size(path2);
+        System.out.println(size);
 
-//		InputStream newInputStream(Path path, OpenOption…how):获取 InputStream 对象
-		InputStream inputStream = Files.newInputStream(path1, StandardOpenOption.READ);
+    }
 
-//		OutputStream newOutputStream(Path path, OpenOption…how) : 获取 OutputStream 对象
-		OutputStream outputStream = Files.newOutputStream(path1, StandardOpenOption.WRITE,StandardOpenOption.CREATE);
+    @Test
+    public void test2() throws IOException{
+        Path path1 = Paths.get("d:\\nio", "hello.txt");
+        Path path2 = Paths.get("atguigu.txt");
+//        boolean exists(Path path, LinkOption … opts) : 判断文件是否存在
+        System.out.println(Files.exists(path2, LinkOption.NOFOLLOW_LINKS));
 
+//        boolean isDirectory(Path path, LinkOption … opts) : 判断是否是目录
+        //不要求此path对应的物理文件存在。
+        System.out.println(Files.isDirectory(path1, LinkOption.NOFOLLOW_LINKS));
 
-//		SeekableByteChannel newByteChannel(Path path, OpenOption…how) : 获取与指定文件的连接，how 指定打开方式。
-		SeekableByteChannel channel = Files.newByteChannel(path1, StandardOpenOption.READ,StandardOpenOption.WRITE,StandardOpenOption.CREATE);
+//        boolean isRegularFile(Path path, LinkOption … opts) : 判断是否是文件
 
-//		DirectoryStream<Path>  newDirectoryStream(Path path) : 打开 path 指定的目录
-		Path path2 = Paths.get("e:\\teach");
-		DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path2);
-		Iterator<Path> iterator = directoryStream.iterator();
-		while(iterator.hasNext()){
-			System.out.println(iterator.next());
-		}
+//        boolean isHidden(Path path) : 判断是否是隐藏文件
+        //要求此path对应的物理上的文件需要存在。才可判断是否隐藏。否则，抛异常。
+//        System.out.println(Files.isHidden(path1));
+
+//        boolean isReadable(Path path) : 判断文件是否可读
+        System.out.println(Files.isReadable(path1));
+//        boolean isWritable(Path path) : 判断文件是否可写
+        System.out.println(Files.isWritable(path1));
+//        boolean notExists(Path path, LinkOption … opts) : 判断文件是否不存在
+        System.out.println(Files.notExists(path1, LinkOption.NOFOLLOW_LINKS));
+    }
+
+    /**
+     * StandardOpenOption.READ:表示对应的Channel是可读的。
+     * StandardOpenOption.WRITE：表示对应的Channel是可写的。
+     * StandardOpenOption.CREATE：如果要写出的文件不存在，则创建。如果存在，忽略
+     * StandardOpenOption.CREATE_NEW：如果要写出的文件不存在，则创建。如果存在，抛异常
+     *
+     * @author shkstart 邮箱：shkstart@126.com
+     * @throws IOException
+     */
+    @Test
+    public void test3() throws IOException{
+        Path path1 = Paths.get("d:\\nio", "hello.txt");
+
+//        InputStream newInputStream(Path path, OpenOption…how):获取 InputStream 对象
+        InputStream inputStream = Files.newInputStream(path1, StandardOpenOption.READ);
+
+//        OutputStream newOutputStream(Path path, OpenOption…how) : 获取 OutputStream 对象
+        OutputStream outputStream = Files.newOutputStream(path1, StandardOpenOption.WRITE,StandardOpenOption.CREATE);
 
 
-	}
+//        SeekableByteChannel newByteChannel(Path path, OpenOption…how) : 获取与指定文件的连接，how 指定打开方式。
+        SeekableByteChannel channel = Files.newByteChannel(path1, StandardOpenOption.READ,StandardOpenOption.WRITE,StandardOpenOption.CREATE);
+
+//        DirectoryStream<Path>  newDirectoryStream(Path path) : 打开 path 指定的目录
+        Path path2 = Paths.get("e:\\teach");
+        DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path2);
+        Iterator<Path> iterator = directoryStream.iterator();
+        while(iterator.hasNext()){
+            System.out.println(iterator.next());
+        }
+
+
+    }
 }
-
 ```
 
 # 七、网络编程
@@ -6911,7 +6835,6 @@ public class InetAddressTest {
 
 
 }
-
 ```
 
 ### 3.通信要素2：网络协议
@@ -7097,7 +7020,6 @@ public class TCPTest1 {
     }
 
 }
-
 ```
 
 3.2客户端发送文件给服务端，服务端将文件保存在本地。
@@ -7172,7 +7094,6 @@ public class TCPTest2 {
 
     }
 }
-
 ```
 
 3.3从客户端发送文件给服务端
@@ -7269,7 +7190,6 @@ public class TCPTest3 {
 
     }
 }
-
 ```
 
 ## （四）UDP网络编程
@@ -7310,8 +7230,6 @@ public class TCPTest3 {
 
     }
 ```
-
-
 
 ### 5.接收端
 
@@ -7388,7 +7306,6 @@ public class URLTest {
         }
     }
 }
-
 ```
 
 ### 2.URLConnection类
@@ -7460,7 +7377,6 @@ public class URLTest1 {
         }
     }
 }
-
 ```
 
 # 八、反射
@@ -7481,10 +7397,10 @@ public class URLTest1 {
 
 ### 4.反射相关的主要API
 
--  java.lang.Class:代表一个类 
--  java.lang.reflect.Method:代表类的方法 
--  java.lang.reflect.Field:代表类的成员变量 
--  java.lang.reflect.Constructor:代表类的构造器
+- java.lang.Class:代表一个类 
+- java.lang.reflect.Method:代表类的方法 
+- java.lang.reflect.Field:代表类的成员变量 
+- java.lang.reflect.Constructor:代表类的构造器
 
 ### 5.使用反射代码对比
 
@@ -7501,7 +7417,7 @@ public class URLTest1 {
     封装性：权限修饰是表示了那些结构建议用，哪些不建议用
     反射：可以用。
      */
-     
+
     //反射之前，对于Person类的操作
     @Test
     public void test1() {
@@ -7556,8 +7472,6 @@ public class URLTest1 {
     }
 ```
 
-
-
 ## （二）Class类
 
 ### 1.Class类简介
@@ -7577,8 +7491,6 @@ public class URLTest1 {
      * 3.加载到内存中的运行时类，会缓存一定的时间，在此时间之内，我们可以通过不同的方式来获取此运行时类。
      */
 ```
-
-
 
 ### 2.Class类的常用方法
 
@@ -7649,8 +7561,6 @@ public class URLTest1 {
     }
 ```
 
-
-
 ## （三）ClassLoader
 
 ### 1.类的加载过程
@@ -7708,8 +7618,6 @@ public class ClassLoaderTest {
     }
 }
 ```
-
-
 
 ## （四）创建运行时类的对象
 
@@ -7773,8 +7681,6 @@ public class NewInstanceTest {
     }
 }
 ```
-
-
 
 ## （五）获取运行时类的完整结构
 
@@ -7924,7 +7830,6 @@ public class MethodTest {
         }
     }
 }
-
 ```
 
 ### 3.获取构造器结构
@@ -8051,8 +7956,6 @@ public class MethodTest {
     }
 ```
 
-
-
 ## （六）调用运行时类的指定结构
 
 ### 1.调用指定方法
@@ -8110,8 +8013,6 @@ public class MethodTest {
     }
 ```
 
-
-
 ### 2.调用指定属性
 
 ![image-20211115140829774](JAVA高级.assets/image-20211115140829774.png)
@@ -8155,10 +8056,7 @@ public class MethodTest {
         System.out.println(o);
 
     }
-
 ```
-
-
 
 ### 3.调用指定构造器
 
@@ -8185,8 +8083,6 @@ public class MethodTest {
 
     }
 ```
-
-
 
 ## （七）反射的应用：动态代理
 
@@ -8247,10 +8143,7 @@ public class StaticProxyTest {
 
     }
 }
-
 ```
-
-
 
 ### 3.动态代理对比
 
@@ -8378,10 +8271,10 @@ public class ProxyTest {
 }
 ```
 
-
-
 ### 6.动态代理与AOP（Aspect Orient Programming)
 
 ![image-20211115141438001](JAVA高级.assets/image-20211115141438001.png)
 
 ![image-20211115141449088](JAVA高级.assets/image-20211115141449088.png)
+
+
